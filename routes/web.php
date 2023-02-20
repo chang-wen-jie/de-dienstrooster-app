@@ -19,7 +19,7 @@ Route::get('/', function () {
     return redirect('users');
 });
 
-Route::get('/users/{id?}', [SecretController::class, 'update'])->name('secrets.update');
+Route::get('/users/admin', [UserController::class, 'admin'])->name('users.admin');
 
-
+Route::post('/users/{id?}/edit', [UserController::class, 'update'])->name('users.update');
 

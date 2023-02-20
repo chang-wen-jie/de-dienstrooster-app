@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamp('latest_check_in')->nullable();
             $table->timestamp('latest_check_out')->nullable();
             $table->boolean('present');
+            $table->boolean('active');
         });
     }
 

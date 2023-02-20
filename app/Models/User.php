@@ -15,6 +15,7 @@ class User extends Model
         'latest-check_in',
         'latest-check_out',
         'present',
+        'active',
     ];
 
     public $timestamps = false;
