@@ -10,7 +10,7 @@ class UserController extends Controller
         $present_users = User::where('present', true)->paginate();
         $absent_users = User::where('present', false)->paginate();
 
-        return view('welcome', ['present_users' => $present_users], ['absent_users' => $absent_users]);
+        return view('dashboard.index', ['present_users' => $present_users], ['absent_users' => $absent_users]);
     }
 
     public function show($id) {
@@ -28,7 +28,7 @@ class UserController extends Controller
     public function edit($id) {
         $user = User::findOrFail($id);
 
-        return view('edit', ['user' => $user]);
+        return view('dashboard.edit', ['user' => $user]);
     }
 
     public function update($id)
@@ -42,6 +42,8 @@ class UserController extends Controller
     }
 
     public function admin() {
-        return redirect('admin');
+        $users = User::all();
+
+        return view('dashboard.admin', ['users' => $users]);
     }
 }

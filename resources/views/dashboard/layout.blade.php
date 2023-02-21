@@ -25,11 +25,8 @@
                 <tr>
                     <td>Van Manen MAAS Dashboard</td>
                     <td class="text-center">
-                        <a href="{{ route('users.admin') }}" class="btn btn-primary btn-sm">
-                            Administratie
-
-                        </a><a href="{{ route('users.index') }}" class="btn btn-primary btn-sm">
-                            Dashboard
+                        <a href="{{ Route::currentRouteName() === 'users.index' ? route('users.admin') : route('users.index') }}" class="btn btn-primary btn-sm">
+                            {{ Route::currentRouteName() === 'users.index' ? 'Administratie' : 'Dashboard' }}
                         </a>
                     </td>
                 </tr>

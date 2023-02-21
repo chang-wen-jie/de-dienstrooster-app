@@ -3,19 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Model
+class User extends Authenticatable
 {
     use HasFactory;
 
     protected $fillable = [
+        'email',
         'name',
         'password',
-        'latest-check_in',
-        'latest-check_out',
+        'latest_check_in',
+        'latest_check_out',
+        'email_verified_at',
         'present',
         'active',
+        'remember_token',
     ];
 
     public $timestamps = false;

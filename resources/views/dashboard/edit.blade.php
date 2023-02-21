@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('dashboard.layout')
 @section('content')
     <div class="card">
         <div class="card-header">
@@ -14,7 +14,7 @@
                 <label for="name">Naam</label>
                 <input type="text" name="name" class="form-control" value="{{$user->name}}" />
 
-                <input type="checkbox" name="active" {{$user->active ? 'checked="checked' : ''}}"/>
+                <input type="checkbox" name="active" value="1" {{$user->active ? 'checked="checked' : ''}}"/>
                 <label for="active">Actief</label>
 
                 <button type="submit" class="btn btn-block btn-success">Aanpassen</button>
