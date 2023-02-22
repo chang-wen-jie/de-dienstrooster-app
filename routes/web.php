@@ -16,25 +16,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('dashboard');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
 
+    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/admin', [UserController::class, 'admin'])->name('users.admin');
 
     Route::resource('users', UserController::class);
 
-
     Route::post('/users/{id?}/edit', [UserController::class, 'update'])->name('users.update');
-
-
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -14,12 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(10)->create();
+        Role::create([
+            'title' => 'admin',
+        ]);
 
-//         \App\Models\User::factory()->create([
-//             'name' => 'Test User',
-//             'email' => 'test@example.com',
-//         ]);
+        Role::create([
+            'title' => 'user',
+        ]);
 
         User::create([
             'name' => 'admin',
@@ -30,5 +32,7 @@ class DatabaseSeeder extends Seeder
             'present' => true,
             'active' => true,
         ]);
+
+        User::factory(10)->create();
     }
 }

@@ -10,16 +10,15 @@ class User extends Authenticatable
     use HasFactory;
 
     protected $fillable = [
-        'email',
         'name',
+        'email',
+        'email_verified_at',
         'password',
+        'remember_token',
+        'role',
         'latest_check_in',
         'latest_check_out',
-        'email_verified_at',
         'present',
         'active',
-        'remember_token',
     ];
-
-    public $timestamps = false;
 }

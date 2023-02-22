@@ -15,14 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email');
-            $table->string('password');
             $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->string('remember_token')->nullable();
+            $table->timestamps();
+            $table->foreignId('role_id')->nullable()->constrained('roles');
             $table->timestamp('last_check_in')->nullable();
             $table->timestamp('last_check_out')->nullable();
             $table->boolean('present')->default(0);
             $table->boolean('active')->default(0);
-            $table->string('remember_token')->nullable();
-            $table->timestamps();
         });
     }
 
