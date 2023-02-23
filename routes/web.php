@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +21,12 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 
+    Route::get('/events', [EventController::class, 'index']);
+
     Route::get('/users/admin', [UserController::class, 'admin'])->name('users.admin');
-
     Route::resource('users', UserController::class);
-
     Route::post('/users/{id?}/edit', [UserController::class, 'update'])->name('users.update');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

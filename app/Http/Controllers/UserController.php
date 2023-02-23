@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function index() {
-        $session_id = Auth::user()->id;
-        $session_user = User::where('id', $session_id)->firstOrFail();
-        $session_role = Role::where('id', $session_user->role_id)->firstOrFail();
+        $session_role = Auth::user()->role_id;
 
         $present_users = User::where('active', true)->where('present', true)->paginate();
         $absent_users = User::where('active', true)->where('present', false)->paginate();
@@ -19,7 +16,7 @@ class UserController extends Controller
         return view('dashboard', ['present_users' => $present_users, 'absent_users' => $absent_users, 'session_role' => $session_role]);
     }
 
-    public function show($id) {
+    public function show(int $id) {
         $user = User::findOrFail($id);
         $presence_status = !$user->present;
         $user->update([
@@ -37,9 +34,9 @@ class UserController extends Controller
         return view('admin.edit', ['user' => $user]);
     }
 
-    public function update($id)
+    public function update(int $id)
     {
-        $user = User::whereId($id);
+        $user = User::findOrFail($id);
         $input = request('name');
         $checkbox = request('active');
         $user->update(['name' => $input, 'active' => $checkbox]);
@@ -47,13 +44,19 @@ class UserController extends Controller
         return redirect('/users/admin');
     }
 
+    public function calendar() {
+        return view('calendar');
+    }
+
     public function admin() {
+        $session_role = Auth::user()->role_id;
+
         $users = User::all()->sortByDesc('active');
 
-        $session_id = Auth::user()->id;
-        $session_user = User::where('id', $session_id)->firstOrFail();
-        $session_role = Role::where('id', $session_user->role_id)->firstOrFail();
+        if ($session_role === 1) {
+            return view('admin.admin', ['users' => $users]);
+        }
 
-        return view('admin.admin', ['users' => $users]);
+        return redirect()->back();
     }
 }

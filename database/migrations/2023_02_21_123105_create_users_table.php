@@ -20,10 +20,10 @@ return new class extends Migration
             $table->string('remember_token')->nullable();
             $table->timestamps();
             $table->foreignId('role_id')->nullable()->constrained('roles');
-            $table->timestamp('last_check_in')->nullable();
-            $table->timestamp('last_check_out')->nullable();
+            $table->timestamp('last_check_in')->default(now());
+            $table->timestamp('last_check_out')->default(now());
             $table->boolean('present')->default(0);
-            $table->boolean('active')->default(0);
+            $table->boolean('active')->default(1)->nullable();
         });
     }
 
