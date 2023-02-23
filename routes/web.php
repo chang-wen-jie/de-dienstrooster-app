@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EventController;
+use App\Http\Controllers\CalendarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,7 +23,8 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 
-    Route::get('/events', [EventController::class, 'index']);
+    Route::get('/calendar', [CalendarController::class, 'index']);
+    Route::get('/events', [CalendarController::class, 'events']);
 
     Route::get('/users/admin', [UserController::class, 'admin'])->name('users.admin');
     Route::resource('users', UserController::class);
