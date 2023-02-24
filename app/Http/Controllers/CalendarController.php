@@ -12,8 +12,11 @@ class CalendarController extends Controller
 
     public function events(Request $request)
     {
-        $start = $request->start;
-        $end = $request->end;
+        /**
+         * Haalt de huidige start- en einddatum van de geselecteerde datumbereik op.
+         */
+        $start = $request->get('start');
+        $end = $request->get('end');
 
         $events = Event::whereBetween('start', [$start, $end])->get();
 
@@ -23,12 +26,11 @@ class CalendarController extends Controller
                 'id' => $event->id,
                 'title' => $event->title,
                 'start' => $event->start,
-                'end' => $event->end,
+                'employed' => $event->employed,
+                'in_office' => $event->in_office,
             ];
         }
 
-        $json_data = response()->json($event_list);
-
-        return $json_data;
+        return response()->json($event_list);
     }
 }

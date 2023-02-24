@@ -15,7 +15,7 @@ class User extends Authenticatable
         'email_verified_at',
         'password',
         'remember_token',
-        'role',
+        'role_id',
         'latest_check_in',
         'latest_check_out',
         'present',

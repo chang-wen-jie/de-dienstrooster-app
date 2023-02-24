@@ -23,7 +23,7 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
 
-    Route::get('/calendar', [CalendarController::class, 'index']);
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
     Route::get('/events', [CalendarController::class, 'events']);
 
     Route::get('/users/admin', [UserController::class, 'admin'])->name('users.admin');
