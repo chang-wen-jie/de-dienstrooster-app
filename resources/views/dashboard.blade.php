@@ -21,12 +21,12 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                     @php
-                                            $date = null;
-                                            $date1 = Carbon::parse($present_user->last_check_in);
-                                            $date2 = Carbon::parse($present_user->last_check_out);
+                                        $date = null;
+                                        $date1 = Carbon::parse($present_user->last_check_in);
+                                        $date2 = Carbon::parse($present_user->last_check_out);
 
-                                            $date1->greaterThan($date2) ? $date = $date1 : $date = $date2;
-                                        @endphp
+                                        $date1->greaterThan($date2) ? $date = $date1 : $date = $date2;
+                                    @endphp
 
                                         {{ $session_role === 1 ? $date : $date->toDateString() }}
                                     </td>

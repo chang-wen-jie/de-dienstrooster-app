@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Event;
 
@@ -22,12 +23,16 @@ class CalendarController extends Controller
 
         $event_list = [];
         foreach ($events as $event) {
+            $employee_id = $event->user_id;
+            $employee = User::findOrFail($employee_id);
+
             $event_list[] = [
                 'id' => $event->id,
-                'title' => $event->title,
+                'name' => $employee->name,
+                'onDuty' => $event->on_duty,
                 'start' => $event->start,
-                'employed' => $event->employed,
-                'in_office' => $event->in_office,
+                'shiftEnd' => $event->shift_end,
+                'sick' => $event->sick,
             ];
         }
 

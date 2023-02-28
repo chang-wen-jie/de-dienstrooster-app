@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->boolean('on_duty')->nullable();
             $table->dateTime('start');
-            $table->boolean('employed')->nullable();
-            $table->boolean('in_office')->nullable();
+            $table->dateTime('shift_end');
+            $table->boolean('sick')->nullable();
             $table->timestamps();
         });
     }

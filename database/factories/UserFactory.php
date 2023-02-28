@@ -18,17 +18,20 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $last_check_in = Carbon::now()->month(2)->day(rand(1, 28))->hour(rand(0, 23))->second(rand(0, 59));
+        $last_check_out = $last_check_in->copy()->addHours(rand(1, 24))->addMinutes(rand(0, 59))->addSeconds(rand(0, 59));
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
-            'role_id' => 2,
-            'last_check_in' => Carbon::now()->month(2)->day(rand(1, 28))->hour(rand(0, 23))->second(rand(0, 59)),
-            'last_check_out'=> Carbon::now()->month(2)->day(rand(1, 28))->hour(rand(0, 23))->second(rand(0, 59)),
-            'present' => false,
-            'active' => true,
+            'role_id' => fake()->numberBetween(1, 2),
+            'last_check_in' => $last_check_in,
+            'last_check_out'=> $last_check_out,
+            'present' => fake()->boolean(),
+            'active' => fake()->boolean(),
         ];
     }
 
