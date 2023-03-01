@@ -17,10 +17,10 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
-        $shift_start = Carbon::now()->month(2)->day(rand(1, 28))->hour(rand(9, 16))->minute(0)->second(0);
-        $max_shift_duration = 17 - $shift_start->hour; // Maximum shift duration that ends before 5 PM (17:00)
-        $max_shift_minutes = ($max_shift_duration * 60) - $shift_start->minute; // Maximum shift duration in minutes
-        $max_shift_seconds = ($max_shift_minutes * 60) - $shift_start->second; // Maximum shift duration in seconds
+        $shift_start = Carbon::now()->month(3)->day(rand(1, 28))->hour(rand(9, 16))->minute(0)->second(0);
+        $max_shift_duration = 17 - $shift_start->hour;
+        $max_shift_minutes = ($max_shift_duration * 60) - $shift_start->minute;
+        $max_shift_seconds = ($max_shift_minutes * 60) - $shift_start->second;
         $shift_end = $shift_start->copy()->addSeconds(rand(0, $max_shift_seconds));
 
         return [

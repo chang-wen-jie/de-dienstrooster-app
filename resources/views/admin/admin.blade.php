@@ -50,7 +50,7 @@
                                             $date2 = Carbon\Carbon::parse($user->last_check_out);
                                         @endphp
 
-                                        {{ $date1->greaterThan($date2) ? $date1 : $date2 }}
+                                        {{ $date1->greaterThan($date2) ? $date1 : $date2 }} {{ $date1->greaterThan($date2) ? '(Ingecheckt)' : '(Uitgecheckt)' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         <a href="{{ route('users.edit', $user->id)}}" class="btn btn-primary btn-sm">

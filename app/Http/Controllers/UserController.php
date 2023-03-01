@@ -9,7 +9,6 @@ class UserController extends Controller
 {
     public function index() {
         $session_role = Auth::user()->role_id;
-
         $present_users = User::where('active', true)->where('present', true)->paginate();
         $absent_users = User::where('active', true)->where('present', false)->paginate();
 
@@ -18,12 +17,17 @@ class UserController extends Controller
 
     public function show(int $id) {
         $user = User::findOrFail($id);
-        $presence_status = !$user->present;
-        $user->update([
-            'present' => $presence_status,
-            'last_check_in' => now(),
-            'last_check_out' => now(),
-        ]);
+        $present = !$user->present;
+        $activity_time = now();
+        $updateData = ['present' => $present];
+
+        if ($present) {
+            $updateData['last_check_in'] = $activity_time;
+        } else {
+            $updateData['last_check_out'] = $activity_time;
+        }
+
+        $user->update($updateData);
 
         return redirect()->back();
     }
@@ -50,7 +54,6 @@ class UserController extends Controller
 
     public function admin() {
         $session_role = Auth::user()->role_id;
-
         $users = User::all()->sortByDesc('active');
 
         if ($session_role === 1) {

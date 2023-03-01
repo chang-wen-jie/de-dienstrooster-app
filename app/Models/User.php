@@ -16,8 +16,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'role_id',
-        'latest_check_in',
-        'latest_check_out',
+        'last_check_in',
+        'last_check_out',
         'present',
         'active',
     ];
