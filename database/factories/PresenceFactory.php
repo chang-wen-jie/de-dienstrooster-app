@@ -6,9 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Event>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Presence>
  */
-class EventFactory extends Factory
+class PresenceFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -24,7 +24,7 @@ class EventFactory extends Factory
         $shift_end = $shift_start->copy()->addSeconds(rand(0, $max_shift_seconds));
 
         return [
-            'user_id' => fake()->unique()->numberBetween(1, 15),
+            'employee_id' => fake()->numberBetween(1, 15),
             'on_duty' => fake()->boolean(),
             'start' => $shift_start,
             'shift_end' => $shift_end,

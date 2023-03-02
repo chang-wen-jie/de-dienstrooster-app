@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('events', function (Blueprint $table) {
+        Schema::create('presence', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users');
+            $table->foreignId('employee_id')->nullable()->constrained('employees');
             $table->boolean('on_duty')->nullable();
             $table->dateTime('start');
             $table->dateTime('shift_end');
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('calendar');
+        Schema::dropIfExists('presence');
     }
 };

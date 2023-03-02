@@ -3,9 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Event;
+use App\Models\Presence;
 use App\Models\Role;
-use App\Models\User;
+use App\Models\Employee;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'user',
         ]);
 
-        User::create([
+        Employee::create([
             'name' => 'admin',
             'email' => 'admin@example.com',
             'password' => Hash::make('admin'),
@@ -35,8 +35,8 @@ class DatabaseSeeder extends Seeder
             'active' => true,
         ]);
 
-        User::factory(15)->create();
+        Employee::factory(15)->create();
 
-        Event::factory(15)->create();
+        Presence::factory(100)->create();
     }
 }

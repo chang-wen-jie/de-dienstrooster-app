@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Presentieoverzicht') }}
+            {{ __('Personeelsrooster') }}
         </h2>
     </x-slot>
 
@@ -12,7 +12,7 @@
                     <div class="min-w-full align-middle">
 
                         <div class="color-bubble-container">
-                            <span class="color-bubble bg-success"></span> Aanwezig
+                            <span class="color-bubble bg-success"></span> Ingeroosterd
                             <span class="color-bubble bg-warning"></span> Vrij
                             <span class="color-bubble bg-danger"></span> Ziek
                         </div>

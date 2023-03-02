@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use App\Models\User;
+use App\Models\Employee;
 use Illuminate\Http\Request;
-use App\Models\Event;
+use App\Models\Presence;
 
 class CalendarController extends Controller
 {
@@ -19,12 +19,12 @@ class CalendarController extends Controller
         $start = $request->get('start');
         $end = $request->get('end');
 
-        $events = Event::whereBetween('start', [$start, $end])->get();
+        $events = Presence::whereBetween('start', [$start, $end])->get();
 
         $event_list = [];
         foreach ($events as $event) {
-            $employee_id = $event->user_id;
-            $employee = User::findOrFail($employee_id);
+            $employee_id = $event->employee_id;
+            $employee = Employee::findOrFail($employee_id);
 
             $event_list[] = [
                 'id' => $event->id,

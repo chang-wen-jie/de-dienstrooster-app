@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CalendarController;
 
@@ -21,14 +21,14 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
     Route::get('/events', [CalendarController::class, 'events']);
 
-    Route::get('/users/admin', [UserController::class, 'admin'])->name('users.admin');
-    Route::resource('users', UserController::class);
-    Route::post('/users/{id?}/edit', [UserController::class, 'update'])->name('users.update');
+    Route::get('/users/admin', [DashboardController::class, 'admin'])->name('users.admin');
+    Route::resource('users', DashboardController::class);
+    Route::post('/users/{id?}/edit', [DashboardController::class, 'update'])->name('users.update');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

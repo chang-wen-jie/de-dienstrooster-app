@@ -14,7 +14,7 @@
                             <thead>
                             <tr>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Rol</span>
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Bedrijfsrol</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Naam</span>
@@ -23,7 +23,7 @@
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Laatste activiteit</span>
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Meest recente activiteit</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Acties</span>
@@ -35,7 +35,7 @@
                             @foreach($users as $user)
                                 <tr class="bg-white">
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        {{ $user->role_id ===1 ? 'Beheerder' : 'Medewerker' }}
+                                        {{ $user->role_id === 1 ? 'Beheerder' : 'Medewerker' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         {{ $user->name }}
@@ -45,12 +45,16 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         @php
-                                            $recent = null;
+                                            $checked_in = false;
                                             $date1 = Carbon\Carbon::parse($user->last_check_in);
                                             $date2 = Carbon\Carbon::parse($user->last_check_out);
+
+                                            if ($date1->greaterThan($date2)) {
+                                                $checked_in = true;
+                                            }
                                         @endphp
 
-                                        {{ $date1->greaterThan($date2) ? $date1 : $date2 }} {{ $date1->greaterThan($date2) ? '(Ingecheckt)' : '(Uitgecheckt)' }}
+                                        {{ $checked_in ? $date1 : $date2 }} <b>({{ $checked_in ? 'Ingecheckt' : 'Uitgecheckt' }})</b>
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         <a href="{{ route('users.edit', $user->id)}}" class="btn btn-primary btn-sm">
