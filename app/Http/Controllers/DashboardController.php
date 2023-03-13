@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Presence;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -12,12 +13,14 @@ class DashboardController extends Controller
         $present_users = Employee::where('active', true)->where('present', true)->paginate();
         $absent_users = Employee::where('active', true)->where('present', false)->paginate();
 
-        return view('dashboard', ['present_users' => $present_users, 'absent_users' => $absent_users, 'session_role' => $session_role]);
+        $events = Presence::all();
+
+        return view('dashboard', ['present_users' => $present_users, 'absent_users' => $absent_users, 'session_role' => $session_role, 'events' => $events]);
     }
 
     public function show(int $id) {
-        $user = Employee::findOrFail($id);
-        $present = !$user->present;
+        $employee = Employee::findOrFail($id);
+        $present = !$employee->present;
         $activity_time = now();
         $presence_data = ['present' => $present];
 
@@ -27,23 +30,23 @@ class DashboardController extends Controller
             $presence_data['last_check_out'] = $activity_time;
         }
 
-        $user->update($presence_data);
+        $employee->update($presence_data);
 
         return redirect()->back();
     }
 
     public function edit($id) {
-        $user = Employee::findOrFail($id);
+        $employee = Employee::findOrFail($id);
 
-        return view('admin.edit', ['user' => $user]);
+        return view('admin.edit', ['user' => $employee]);
     }
 
     public function update(int $id)
     {
-        $user = Employee::findOrFail($id);
+        $employee = Employee::findOrFail($id);
         $input = request('name');
         $checkbox = request('active');
-        $user->update(['name' => $input, 'active' => $checkbox]);
+        $employee->update(['name' => $input, 'active' => $checkbox]);
 
         return redirect('/users/admin');
     }
@@ -54,10 +57,10 @@ class DashboardController extends Controller
 
     public function admin() {
         $session_role = Auth::user()->role_id;
-        $users = Employee::all()->sortByDesc('active');
+        $employees = Employee::all()->sortByDesc('active');
 
         if ($session_role === 1) {
-            return view('admin.admin', ['users' => $users]);
+            return view('admin.admin', ['users' => $employees]);
         }
 
         return redirect()->back();

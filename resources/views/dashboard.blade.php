@@ -6,6 +6,14 @@
         </h2>
     </x-slot>
 
+    @foreach($events as $event)
+        <script>
+            var events = [];
+            events.push(@json($event->employee_id))
+            console.log(@json($event->employee_id));
+        </script>
+    @endforeach
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -14,8 +22,14 @@
                         Aanwezigen ({{ count($present_users) }})
                         <table class="min-w-full divide-y divide-gray-200 border">
                             <tbody class="bg-green-300 divide-y divide-gray-200 divide-solid">
+                            <script>
+                                console.log(events);
+                            </script>
                             @foreach($present_users as $present_user)
                                 <tr class="bg-green">
+                                    <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                                        <i class="bi-airplane"></i>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         {{ $present_user->name }}
                                     </td>
