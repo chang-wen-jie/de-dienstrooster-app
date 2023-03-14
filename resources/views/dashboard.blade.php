@@ -6,13 +6,12 @@
         </h2>
     </x-slot>
 
-    @foreach($events as $event)
-        <script>
-            var events = [];
-            events.push(@json($event->employee_id))
-            console.log(@json($event->employee_id));
-        </script>
-    @endforeach
+    <script>
+        var events = [];
+        @foreach($events as $event)
+            events.push(@json($event))
+        @endforeach
+    </script>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -22,25 +21,35 @@
                         Aanwezigen ({{ count($present_users) }})
                         <table class="min-w-full divide-y divide-gray-200 border">
                             <tbody class="bg-green-300 divide-y divide-gray-200 divide-solid">
-                            <script>
-                                console.log(events);
-                            </script>
-                            @foreach($present_users as $present_user)
+                            @foreach($present_users as $index => $present_user)
                                 <tr class="bg-green">
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        <i class="bi-airplane"></i>
+                                        <p id="test_{{ $index }}">test</p>
+                                        <script>
+                                            for (i = 0; i < events.length; i++) {
+                                                if (({{$present_user->id}}) === events[i]['employee_id']) {
+                                                    if (events[i]['on_duty'] === 1) {
+                                                        console.log('true, employee id:', ({{$present_user->id}}), events[i]);
+                                                        document.getElementById("test_{{ $index }}").innerHTML = "true";
+                                                    } else {
+                                                        console.log('false, employee id:', ({{$present_user->id}}), events[i])
+                                                        document.getElementById("test_{{ $index }}").innerHTML = "false";
+                                                    }
+                                                }
+                                            }
+                                        </script>
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         {{ $present_user->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                    @php
-                                        $date = null;
-                                        $date1 = Carbon::parse($present_user->last_check_in);
-                                        $date2 = Carbon::parse($present_user->last_check_out);
+                                        @php
+                                            $date = null;
+                                            $date1 = Carbon::parse($present_user->last_check_in);
+                                            $date2 = Carbon::parse($present_user->last_check_out);
 
-                                        $date1->greaterThan($date2) ? $date = $date1 : $date = $date2;
-                                    @endphp
+                                            $date1->greaterThan($date2) ? $date = $date1 : $date = $date2;
+                                        @endphp
 
                                         {{ $session_role === 1 ? $date : $date->toDateString() }}
                                     </td>
