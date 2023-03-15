@@ -7,9 +7,15 @@
     </x-slot>
 
     <script>
-        var events = [];
+        const events = [];
+        const currentDate = new Date().toDateString();
+
         @foreach($events as $event)
-            events.push(@json($event))
+            var eventDate = new Date(@json($event->start)).toDateString();
+
+            if (currentDate === eventDate) {
+                events.push(@json($event));
+            }
         @endforeach
     </script>
 
@@ -24,16 +30,14 @@
                             @foreach($present_users as $index => $present_user)
                                 <tr class="bg-green">
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        <p id="test_{{ $index }}">test</p>
+                                        <p id="test_{{ $index }}">Vrij</p>
                                         <script>
-                                            for (i = 0; i < events.length; i++) {
-                                                if (({{$present_user->id}}) === events[i]['employee_id']) {
-                                                    if (events[i]['on_duty'] === 1) {
-                                                        console.log('true, employee id:', ({{$present_user->id}}), events[i]);
-                                                        document.getElementById("test_{{ $index }}").innerHTML = "true";
+                                            for (let i = 0; i < events.length; i++) {
+                                                if (({{$present_user->id}}) === events[i]['employee_id'] && events[i]["on_duty"] === 1) {
+                                                    if (events[i]['sick'] === 1) {
+                                                        document.getElementById("test_{{ $index }}").innerHTML = "Ziek";
                                                     } else {
-                                                        console.log('false, employee id:', ({{$present_user->id}}), events[i])
-                                                        document.getElementById("test_{{ $index }}").innerHTML = "false";
+                                                        document.getElementById("test_{{ $index }}").innerHTML = "Ingeroosterd";
                                                     }
                                                 }
                                             }
@@ -68,6 +72,22 @@
                             <tbody class="bg-red-300 divide-y divide-gray-200 divide-solid">
                             @foreach($absent_users as $absent_user)
                                 <tr class="bg-red">
+                                    <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                                        <p id="test2_{{ $index }}">Vrij</p>
+                                        <script>
+                                            for (let i = 0; i < events.length; i++) {
+                                                if (({{$absent_user->id}}) === events[i]['employee_id']) {
+                                                    console.log('hallo', @json($absent_user));
+                                                    if (events[i]['on_duty'] === 1) {
+                                                        console.log('bonjour');
+                                                        document.getElementById("test2_{{ $index }}").innerHTML = "Ingeroosterd";
+                                                    } else {
+                                                        document.getElementById("test2_{{ $index }}").innerHTML = "Ziek";
+                                                    }
+                                                }
+                                            }
+                                        </script>
+                                    </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         {{ $absent_user->name }}
                                     </td>

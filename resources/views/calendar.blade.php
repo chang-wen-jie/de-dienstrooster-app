@@ -32,8 +32,8 @@
                                 // FUllCalendar API
                                 $('#calendar').fullCalendar({
                                     eventRender: function(event, element) {
-                                        var shiftStart = moment(event.start);
-                                        var shiftEnd = moment(event.shiftEnd);
+                                        const shiftStart = moment(event.start);
+                                        const shiftEnd = moment(event.shiftEnd);
 
                                         if (event.onDuty) {
                                             if (shiftEnd.hour() <= 12) {
@@ -72,6 +72,7 @@
 
                                             success: function(presence) {
                                                 const events = [];
+
                                                 for (let i = 0; i < presence.length; i++) {
                                                     const event = presence[i];
 
