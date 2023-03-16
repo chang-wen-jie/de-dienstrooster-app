@@ -21,4 +21,10 @@ class Employee extends Authenticatable
         'present',
         'active',
     ];
+
+    public function presence()
+    {
+        return $this->hasMany(Presence::class, 'employee_id', 'id');
+//        return $this->hasOne(Presence::class,'id', 'employee_id');
+    }
 }

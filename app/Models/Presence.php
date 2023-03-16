@@ -14,4 +14,11 @@ class Presence extends Model
     protected $fillable = ['employee_id', 'on_duty', 'start', 'shift_end', 'sick'];
 
     protected $dates = ['start', 'shift_end'];
+
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class,'id', 'employee_id');
+    }
+
 }

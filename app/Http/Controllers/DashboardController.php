@@ -3,19 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use App\Models\Presence;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index() {
-        $session_role = Auth::user()->role_id;
         $present_users = Employee::where('active', true)->where('present', true)->paginate();
         $absent_users = Employee::where('active', true)->where('present', false)->paginate();
 
-        $events = Presence::all();
-
-        return view('dashboard', ['present_users' => $present_users, 'absent_users' => $absent_users, 'session_role' => $session_role, 'events' => $events]);
+        return view('dashboard', ['present_users' => $present_users, 'absent_users' => $absent_users]);
     }
 
     public function show(int $id) {
