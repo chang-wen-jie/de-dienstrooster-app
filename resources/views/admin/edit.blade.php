@@ -58,11 +58,11 @@
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __("Geef de start- en einddatum- en tijd van de aankomende dienst op. Opgeslagen diensten worden getoond in de kalender.") }}
+                                {{ __("Geef de start- en einddatum- en tijd van de aankomende dienst op. Ingeplande diensten zijn zichtbaar binnen de kalender.") }}
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.schedule', $user->id) }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('users.schedule', $user->id, 'shift') }}" class="mt-6 space-y-6">
                             @csrf
                             <x-input-label for="start" :value="__('Start dienst')" />
                             <input type="datetime-local" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59">
@@ -87,7 +87,7 @@
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __("Geef het datumbereik gepaard met de reden van de absentie op.") }}
+                                {{ __("Geef het datumbereik gepaard met de reden van de afwezigheid op. Geregistreerde afwezigheden zijn zichtbaar binnen de kalender.") }}
                             </p>
                         </header>
 

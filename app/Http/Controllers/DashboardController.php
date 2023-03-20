@@ -48,7 +48,7 @@ class DashboardController extends Controller
         return redirect('/users/admin');
     }
 
-    public function schedule(int $id) {
+    public function schedule(int $id, string $occasion) {
         Presence::create([
             'employee_id' => $id,
             'status_id' => 1,
@@ -57,6 +57,7 @@ class DashboardController extends Controller
             'called_in_sick' => false,
         ]);
 
+//        return $occasion;
         return redirect('/users/admin');
     }
 
