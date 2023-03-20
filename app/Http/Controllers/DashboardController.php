@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\Presence;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -31,7 +32,7 @@ class DashboardController extends Controller
         return redirect()->back();
     }
 
-    public function edit($id) {
+    public function edit(int $id) {
         $employee = Employee::findOrFail($id);
 
         return view('admin.edit', ['user' => $employee]);
@@ -43,6 +44,18 @@ class DashboardController extends Controller
         $input = request('name');
         $checkbox = request('active');
         $employee->update(['name' => $input, 'active' => $checkbox]);
+
+        return redirect('/users/admin');
+    }
+
+    public function schedule(int $id) {
+        Presence::create([
+            'employee_id' => $id,
+            'status_id' => 1,
+            'start' => request('start'),
+            'end' => request('end'),
+            'called_in_sick' => false,
+        ]);
 
         return redirect('/users/admin');
     }

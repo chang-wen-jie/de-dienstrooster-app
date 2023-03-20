@@ -27,12 +27,12 @@ class CalendarController extends Controller
             $employee = Employee::findOrFail($employee_id);
 
             $event_list[] = [
-                'id' => $event->id,
                 'name' => $employee->name,
-                'onDuty' => $event->on_duty,
+                'id' => $event->id,
+                'status' => $event->status_id,
                 'start' => $event->start,
-                'shiftEnd' => $event->shift_end,
-                'sick' => $event->sick,
+                'end' => $event->end,
+                'sick' => $event->called_in_sick,
             ];
         }
 

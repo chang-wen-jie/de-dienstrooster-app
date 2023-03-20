@@ -6,6 +6,7 @@ namespace Database\Seeders;
 use App\Models\Presence;
 use App\Models\Role;
 use App\Models\Employee;
+use App\Models\Status;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -17,11 +18,19 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Role::create([
-            'title' => 'admin',
+            'role' => 'admin',
         ]);
 
         Role::create([
-            'title' => 'user',
+            'role' => 'user',
+        ]);
+
+        Status::create([
+            'status' => 'on_duty',
+        ]);
+
+        Status::create([
+            'status' => 'on_leave',
         ]);
 
         Employee::create([

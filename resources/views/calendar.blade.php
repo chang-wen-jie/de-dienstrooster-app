@@ -13,14 +13,15 @@
 
                         <div class="color-bubble-container">
                             <span class="color-bubble bg-success"></span> Ingeroosterd
-                            <span class="color-bubble bg-warning"></span> Vrij
+                            <span class="color-bubble bg-warning"></span> Roostervrij
                             <span class="color-bubble bg-danger"></span> Ziek
                         </div>
 
                         <div class="filter-container">
                             <select id="filter">
                                 <option value="">Alle</option>
-                                <option value="onDuty">Ingeroosterd</option>
+                                <option value="1">Ingeroosterd</option>
+                                <option value="2">Roostervrij</option>
                                 <option value="sick">Ziek</option>
                             </select>
                         </div>
@@ -33,9 +34,9 @@
                                 $('#calendar').fullCalendar({
                                     eventRender: function(event, element) {
                                         const shiftStart = moment(event.start);
-                                        const shiftEnd = moment(event.shiftEnd);
+                                        const shiftEnd = moment(event.end);
 
-                                        if (event.onDuty) {
+                                        if (event.status === 1) {
                                             if (shiftEnd.hour() <= 12) {
                                                 element.css({
                                                     'width': '50%',
@@ -76,15 +77,15 @@
                                                 for (let i = 0; i < presence.length; i++) {
                                                     const event = presence[i];
 
-                                                    if (!filter || event[filter]) {
+                                                    if (!filter || event[filter] || event.status == filter) {
                                                         events.push({
                                                             title: event.name,
-                                                            onDuty: event.onDuty,
+                                                            status: event.status,
                                                             start: event.start,
-                                                            shiftEnd: event.shiftEnd,
+                                                            end: event.end,
                                                             sick: event.sick,
-                                                            color: event.onDuty ?
-                                                                event.sick ?
+                                                            color: event.status === 1 ?
+                                                                event.sick === 1 ?
                                                                     '#dc3545' :
                                                                     '#28a745' :
                                                                 '#ffc107',

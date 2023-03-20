@@ -25,10 +25,10 @@ class PresenceFactory extends Factory
 
         return [
             'employee_id' => fake()->numberBetween(1, 15),
-            'on_duty' => fake()->boolean(),
+            'status_id' => fake()->numberBetween(1, 2),
             'start' => $shift_start,
-            'shift_end' => $shift_end,
-            'sick' => fake()->boolean(),
+            'end' => $shift_end,
+            'called_in_sick' => fake()->boolean(),
         ];
     }
 }

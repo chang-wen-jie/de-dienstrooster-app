@@ -28,7 +28,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/users/admin', [DashboardController::class, 'admin'])->name('users.admin');
     Route::resource('users', DashboardController::class);
-    Route::post('/users/{id?}/edit', [DashboardController::class, 'update'])->name('users.update');
+    Route::put('/users/{id?}/edit', [DashboardController::class, 'update'])->name('users.update');
+    Route::post('/users/{id?}/edit', [DashboardController::class, 'schedule'])->name('users.schedule');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

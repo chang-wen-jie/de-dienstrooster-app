@@ -11,9 +11,9 @@ class Presence extends Model
 
     protected $table = 'presence';
 
-    protected $fillable = ['employee_id', 'on_duty', 'start', 'shift_end', 'sick'];
+    protected $fillable = ['employee_id', 'status_id', 'start', 'end', 'called_in_sick'];
 
-    protected $dates = ['start', 'shift_end'];
+    protected $dates = ['start', 'end'];
 
 
     public function employee()
