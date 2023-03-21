@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $user->name }}
+            {{ $employee->name }}
         </h2>
     </x-slot>
 
@@ -20,22 +20,22 @@
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.update', $user->id) }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('users.update', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
                             <div>
                                 <x-input-label for="id" :value="__('Personeelsnummer')" />
-                                <x-text-input id="id" name="id" type="text" class="mt-1 block w-full" :value="old('name', $user->id)" disabled />
+                                <x-text-input id="id" name="id" type="text" class="mt-1 block w-full" :value="old('name', $employee->id)" disabled />
                             </div>
 
                             <div>
                                 <x-input-label for="name" :value="__('Naam')" />
-                                <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+                                <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $employee->name)" required autofocus autocomplete="name" />
                                 <x-input-error class="mt-2" :messages="$errors->get('name')" />
                             </div>
 
                             <div class="block mt-4">
                                 <label for="active" class="inline-flex items-center">
-                                    <input id="active" name="active" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="active" value="1" {{ $user->active ? 'checked="checked' : '' }}"/>
+                                    <input id="active" name="active" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="active" value="1" {{ $employee->active ? 'checked="checked' : '' }}"/>
                                     <span class="ml-2 text-sm text-gray-600">{{ __('Actief?') }}</span>
                                 </label>
                             </div>
@@ -54,15 +54,15 @@
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900">
-                                {{ __('Dienst inplannen') }}
+                                {{ __('Dienst inroosteren') }}
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __("Geef de start- en einddatum- en tijd van de aankomende dienst op. Ingeplande diensten zijn zichtbaar binnen de kalender.") }}
+                                {{ __("Geef de start- en einddatum- en tijd van de aankomende dienst op. Ingeroosterde diensten zijn zichtbaar binnen de kalender.") }}
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.schedule', $user->id, 'shift') }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('users.schedule', $employee->id, 'shift') }}" class="mt-6 space-y-6">
                             @csrf
                             <x-input-label for="start" :value="__('Start dienst')" />
                             <input type="datetime-local" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59">
@@ -71,7 +71,7 @@
                             <input type="datetime-local" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59">
 
                             <div class="flex items-center gap-4">
-                                <x-primary-button>{{ __('Inplannen') }}</x-primary-button>
+                                <x-primary-button>{{ __('Inroosteren') }}</x-primary-button>
                             </div>
                         </form>
                     </section>
@@ -91,12 +91,12 @@
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.schedule', $user->id) }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('users.schedule', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
-                            <x-input-label for="end" :value="__('Reden')" />
-                            <select name="pets" id="pet-select">
-                                <option value="dog">Ziek</option>
-                                <option value="cat">Vakantie</option>
+                            <x-input-label for="absence" :value="__('Reden')" />
+                            <select id="absence-select" name="absence">
+                                <option value="sick">Ziek</option>
+                                <option value="leave">Vakantie</option>
                             </select>
 
                             <x-input-label for="start" :value="__('Van')" />

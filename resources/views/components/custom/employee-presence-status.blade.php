@@ -6,7 +6,7 @@
         @if(date('Y-m-d', strtotime($presence->start)) == date('Y-m-d'))
             @if($presence->status_id === 1)
                 @php
-                    $status = $presence->called_in_sick ? __('Ziek') : __('Ingeroosterd');
+                    $status = $presence->called_in_sick ? __('Ingeroosterd (Ziek)') : __('Ingeroosterd');
                 @endphp
             @endif
         @endif

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Personelen') }} ({{ count($users) }})
+            {{ __('Personelen') }} ({{ count($employees) }})
         </h2>
     </x-slot>
 
@@ -26,28 +26,28 @@
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Meest recente activiteit</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Acties</span>
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Beheren</span>
                                 </th>
                             </tr>
                             </thead>
 
                             <tbody class="bg-white divide-y divide-gray-200 divide-solid">
-                            @foreach($users as $user)
+                            @foreach($employees as $employee)
                                 <tr class="bg-white">
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        {{ $user->role_id === 1 ? 'Beheerder' : 'Medewerker' }}
+                                        {{ $employee->role_id === 1 ? 'Beheerder' : 'Medewerker' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        {{ $user->name }}
+                                        {{ $employee->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        {{ $user->active ? 'Actief' : 'Inactief' }}
+                                        {{ $employee->active ? 'Actief' : 'Inactief' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         @php
                                             $checked_in = false;
-                                            $date1 = Carbon\Carbon::parse($user->last_check_in);
-                                            $date2 = Carbon\Carbon::parse($user->last_check_out);
+                                            $date1 = Carbon\Carbon::parse($employee->last_check_in);
+                                            $date2 = Carbon\Carbon::parse($employee->last_check_out);
 
                                             if ($date1->greaterThan($date2)) {
                                                 $checked_in = true;
@@ -57,8 +57,8 @@
                                         {{ $checked_in ? $date1 : $date2 }} <b>({{ $checked_in ? 'Ingecheckt' : 'Uitgecheckt' }})</b>
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        <a href="{{ route('users.edit', $user->id)}}" class="btn btn-primary btn-sm">
-                                            Wijzigen
+                                        <a href="{{ route('users.edit', $employee->id)}}" class="btn btn-primary btn-sm">
+                                            Acties
                                         </a>
                                     </td>
                                 </tr>

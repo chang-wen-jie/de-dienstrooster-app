@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
     public function index() {
-        $present_users = Employee::where('active', true)->where('present', true)->paginate();
-        $absent_users = Employee::where('active', true)->where('present', false)->paginate();
+        $present_employees = Employee::where('active', true)->where('present', true)->paginate();
+        $absent_employees = Employee::where('active', true)->where('present', false)->paginate();
 
-        return view('dashboard', ['present_users' => $present_users, 'absent_users' => $absent_users]);
+        return view('dashboard', ['present_users' => $present_employees, 'absent_users' => $absent_employees]);
     }
 
     public function show(int $id) {
@@ -35,7 +35,7 @@ class DashboardController extends Controller
     public function edit(int $id) {
         $employee = Employee::findOrFail($id);
 
-        return view('admin.edit', ['user' => $employee]);
+        return view('admin.edit', ['employee' => $employee]);
     }
 
     public function update(int $id)
@@ -48,16 +48,29 @@ class DashboardController extends Controller
         return redirect('/users/admin');
     }
 
-    public function schedule(int $id, string $occasion) {
-        Presence::create([
-            'employee_id' => $id,
-            'status_id' => 1,
-            'start' => request('start'),
-            'end' => request('end'),
-            'called_in_sick' => false,
-        ]);
+    public function schedule(int $id) {
+        $start = request('start');
+        $end = request('end');
+        $absence = request('absence');
 
-//        return $occasion;
+        $presence = Presence::where('employee_id', $id)->whereDate('start', $start)->first();
+
+        if ($presence) {
+            $presence->update([
+                'status_id' => $absence === 'leave' ? 2 : 1,
+                'end' => $end,
+                'called_in_sick' => $absence === 'sick',
+            ]);
+        } else {
+            Presence::create([
+                'employee_id' => $id,
+                'status_id' => $absence === 'leave' ? 2 : 1,
+                'start' => $start,
+                'end' => $end,
+                'called_in_sick' => $absence === 'sick',
+            ]);
+        }
+
         return redirect('/users/admin');
     }
 
@@ -70,7 +83,7 @@ class DashboardController extends Controller
         $employees = Employee::all()->sortByDesc('active');
 
         if ($session_role === 1) {
-            return view('admin.admin', ['users' => $employees]);
+            return view('admin.admin', ['employees' => $employees]);
         }
 
         return redirect()->back();
