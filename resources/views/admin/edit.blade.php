@@ -65,10 +65,12 @@
                         <form method="post" action="{{ route('users.schedule', $employee->id, 'shift') }}" class="mt-6 space-y-6">
                             @csrf
                             <x-input-label for="start" :value="__('Start dienst')" />
-                            <input type="datetime-local" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59">
+                            <input type="datetime-local" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
+                            <x-input-error class="mt-2" :messages="$errors->get('start')" />
 
                             <x-input-label for="end" :value="__('Einde dienst')" />
-                            <input type="datetime-local" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59">
+                            <input type="datetime-local" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
+                            <x-input-error class="mt-2" :messages="$errors->get('end')" />
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>{{ __('Inroosteren') }}</x-primary-button>
@@ -94,16 +96,18 @@
                         <form method="post" action="{{ route('users.schedule', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
                             <x-input-label for="absence" :value="__('Reden')" />
-                            <select id="absence-select" name="absence">
+                            <select id="absence" name="absence">
                                 <option value="sick">Ziek</option>
                                 <option value="leave">Vakantie</option>
                             </select>
 
                             <x-input-label for="start" :value="__('Van')" />
-                            <input type="date" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59">
+                            <input type="date" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
+                            <x-input-error class="mt-2" :messages="$errors->get('start')" />
 
                             <x-input-label for="end" :value="__('Tot')" />
-                            <input type="date" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59">
+                            <input type="date" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
+                            <x-input-error class="mt-2" :messages="$errors->get('end')" />
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>{{ __('Registreren') }}</x-primary-button>
