@@ -34,6 +34,7 @@
                                 $('#calendar').fullCalendar({
                                     eventRender: function(event, element) {
                                         const shiftStart = moment(event.start);
+                                        // BUBBEL KLOPT SOMS NIET WANT ALS JE END OP VOLGENDE DAG DOET DAN IS END MISSCHIEN 0000
                                         const shiftEnd = moment(event.end);
 
                                         if (event.status === 1) {

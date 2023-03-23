@@ -54,22 +54,27 @@ class DashboardController extends Controller
         $end = request('end');
         $absence = request('absence');
 
-        $presence = Presence::where('employee_id', $id)->whereDate('start', $start)->first();
+        $employee_shift = Presence::where('employee_id', $id)->whereDate('start', $start)->first();
+        $employee_sickness = Presence::where('employee_id', $id)->whereDate('start', $start)->where('called_in_sick', true);
 
-        if ($presence) {
-            $presence->update([
+        if ($employee_shift) {
+            $employee_shift->update([
                 'status_id' => $absence === 'leave' ? 2 : 1,
                 'end' => $end,
                 'called_in_sick' => $absence === 'sick',
             ]);
         } else {
-            Presence::create([
-                'employee_id' => $id,
-                'status_id' => $absence === 'leave' ? 2 : 1,
-                'start' => $start,
-                'end' => $end,
-                'called_in_sick' => $absence === 'sick',
-            ]);
+            if ($employee_sickness) {
+                session()->flash('error', 'Gebruiker is ziek!');
+            } else {
+                Presence::create([
+                    'employee_id' => $id,
+                    'status_id' => $absence === 'leave' ? 2 : 1,
+                    'start' => $start,
+                    'end' => $end,
+                    'called_in_sick' => $absence === 'sick',
+                ]);
+            }
         }
 
         return redirect('/users/admin');

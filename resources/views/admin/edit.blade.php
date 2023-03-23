@@ -72,6 +72,10 @@
                             <input type="datetime-local" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
                             <x-input-error class="mt-2" :messages="$errors->get('end')" />
 
+                            @if(session()->has('error'))
+                                <div class="alert alert-danger">{{ session('error') }}</div>
+                            @endif
+
                             <div class="flex items-center gap-4">
                                 <x-primary-button>{{ __('Inroosteren') }}</x-primary-button>
                             </div>
@@ -89,7 +93,7 @@
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __("Geef het datumbereik gepaard met de reden van de afwezigheid op. Geregistreerde afwezigheden zijn zichtbaar binnen de kalender.") }}
+                                {{ __("Geef het datumbereik gepaard met de afwezigheidsreden op. Geregistreerde afwezigheden zijn zichtbaar binnen de kalender.") }}
                             </p>
                         </header>
 
