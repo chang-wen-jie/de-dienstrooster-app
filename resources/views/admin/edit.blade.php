@@ -62,7 +62,7 @@
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.schedule', $employee->id, 'shift') }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('users.schedule', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
                             <x-input-label for="start" :value="__('Start dienst')" />
                             <input type="datetime-local" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
@@ -72,8 +72,10 @@
                             <input type="datetime-local" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
                             <x-input-error class="mt-2" :messages="$errors->get('end')" />
 
-                            @if(session()->has('error'))
-                                <div class="alert alert-danger">{{ session('error') }}</div>
+                            @if(session('message'))
+                                <div class="alert alert-success">
+                                    {{ session('message') }}
+                                </div>
                             @endif
 
                             <div class="flex items-center gap-4">

@@ -57,7 +57,7 @@ class DashboardController extends Controller
         $employee_shift = Presence::where('employee_id', $id)->whereDate('start', $start)->first();
         $employee_sickness = Presence::where('employee_id', $id)->whereDate('start', $start)->where('called_in_sick', true);
 
-        if ($employee_shift) {
+        if ($absence && $employee_shift) {
             $employee_shift->update([
                 'status_id' => $absence === 'leave' ? 2 : 1,
                 'end' => $end,
@@ -65,7 +65,7 @@ class DashboardController extends Controller
             ]);
         } else {
             if ($employee_sickness) {
-                session()->flash('error', 'Gebruiker is ziek!');
+                return 'Gebruiker is ziek!';
             } else {
                 Presence::create([
                     'employee_id' => $id,
