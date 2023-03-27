@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
-use App\Models\Presence;
+use App\Models\Event;
 
 class CalendarController extends Controller
 {
@@ -19,7 +19,7 @@ class CalendarController extends Controller
         $start = $request->get('start');
         $end = $request->get('end');
 
-        $events = Presence::whereBetween('start', [$start, $end])->get();
+        $events = Event::whereBetween('start', [$start, $end])->get();
 
         $event_list = [];
         foreach ($events as $event) {
@@ -32,7 +32,7 @@ class CalendarController extends Controller
                 'status' => $event->status_id,
                 'start' => $event->start,
                 'end' => $event->end,
-                'sick' => $event->called_in_sick,
+                'sick' => $event->sick,
             ];
         }
 

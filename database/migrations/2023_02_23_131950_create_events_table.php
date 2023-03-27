@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('presence', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->nullable()->constrained('employees');
             $table->foreignId('status_id')->nullable()->constrained('statuses');
             $table->dateTime('start');
             $table->dateTime('end');
-            $table->boolean('called_in_sick')->nullable();
+            $table->boolean('sick')->nullable();
 
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('presence');
+        Schema::dropIfExists('events');
     }
 };

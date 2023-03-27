@@ -36,7 +36,7 @@
                             <div class="block mt-4">
                                 <label for="active" class="inline-flex items-center">
                                     <input id="active" name="active" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="active" value="1" {{ $employee->active ? 'checked="checked' : '' }}"/>
-                                    <span class="ml-2 text-sm text-gray-600">{{ __('Actief?') }}</span>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Is dit personeel nog actief?') }}</span>
                                 </label>
                             </div>
 
@@ -51,6 +51,15 @@
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900">
@@ -107,11 +116,11 @@
                                 <option value="leave">Vakantie</option>
                             </select>
 
-                            <x-input-label for="start" :value="__('Van')" />
+                            <x-input-label for="start" :value="__('Startdatum')" />
                             <input type="date" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
                             <x-input-error class="mt-2" :messages="$errors->get('start')" />
 
-                            <x-input-label for="end" :value="__('Tot')" />
+                            <x-input-label for="end" :value="__('Einddatum')" />
                             <input type="date" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
                             <x-input-error class="mt-2" :messages="$errors->get('end')" />
 

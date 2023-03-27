@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Presence extends Model
+class Event extends Model
 {
     use HasFactory;
 
-    protected $table = 'presence';
+    protected $table = 'events';
 
-    protected $fillable = ['employee_id', 'status_id', 'start', 'end', 'called_in_sick'];
+    protected $fillable = ['employee_id', 'status_id', 'start', 'end', 'sick'];
 
     protected $dates = ['start', 'end'];
 

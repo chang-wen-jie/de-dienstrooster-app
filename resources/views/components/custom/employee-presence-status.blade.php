@@ -2,16 +2,16 @@
 @if (isset($employee))
     @php $status = __('Roostervrij'); @endphp
     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-    @foreach($employee->presence as $presence)
-        @if(date('Y-m-d', strtotime($presence->start)) == date('Y-m-d'))
-            @if($presence->status_id === 1)
+    @foreach($employee->events as $event)
+        @if(date('Y-m-d', strtotime($event->start)) == date('Y-m-d'))
+            @if($event->status_id === 1)
                 @php
-                    $status = $presence->called_in_sick ? __('Ingeroosterd (Ziek)') : __('Ingeroosterd');
+                    $status = $event->sick ? '<span class="text-danger">' . __('Ingeroosterd (Ziek)') . '</span><a href="'.route("users.test", $employee->id).'">' . __('Beter melden') . '</a>' : __('Ingeroosterd');
                 @endphp
             @endif
         @endif
     @endforeach
-        {{$status}}
+        {!! $status !!}
     </td>
 
 @endif

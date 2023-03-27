@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use App\Models\Presence;
+use App\Models\Event;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
 {
@@ -52,27 +51,31 @@ class DashboardController extends Controller
     public function schedule(int $id) {
         $start = request('start');
         $end = request('end');
-        $absence = request('absence');
+        $absence_reason = request('absence');
 
-        $employee_shift = Presence::where('employee_id', $id)->whereDate('start', $start)->first();
-        $employee_sickness = Presence::where('employee_id', $id)->whereDate('start', $start)->where('called_in_sick', true);
+        $employee_shift = Event::where('employee_id', $id)->whereDate('start', $start);
+        $test = Event::where('employee_id', $id)->first();
+        $employee_sickness = Event::where('employee_id', $id)->whereDate('start', $start)->where('sick', true)->exists();
 
-        if ($absence && $employee_shift) {
+        if ($absence_reason && $employee_shift->exists()) {
             $employee_shift->update([
-                'status_id' => $absence === 'leave' ? 2 : 1,
+                'status_id' => $absence_reason === 'leave' ? 2 : 1,
                 'end' => $end,
-                'called_in_sick' => $absence === 'sick',
+                'sick' => $absence_reason === 'sick',
             ]);
         } else {
             if ($employee_sickness) {
-                return 'Gebruiker is ziek!';
+                return redirect()->back()->withErrors(['error' => 'Dit personeel is ziek op deze datum!']);
+            } else if ($employee_shift->exists()) {
+                return redirect()->back()->withErrors(['error' => 'Dit personeel staat al ingeroosterd op deze datum!']);
             } else {
-                Presence::create([
+                dd($test->start, $start);
+                Event::create([
                     'employee_id' => $id,
-                    'status_id' => $absence === 'leave' ? 2 : 1,
+                    'status_id' => $absence_reason === 'leave' ? 2 : 1,
                     'start' => $start,
                     'end' => $end,
-                    'called_in_sick' => $absence === 'sick',
+                    'sick' => $absence_reason === 'sick',
                 ]);
             }
         }
@@ -91,6 +94,13 @@ class DashboardController extends Controller
         if ($session_role === 1) {
             return view('admin.admin', ['employees' => $employees]);
         }
+
+        return redirect()->back();
+    }
+
+    public function test(int $id) {
+        $employee_sickness = Event::where('employee_id', $id)->whereDate('start', now())->where('sick', true);
+        $employee_sickness->update(['sick' => false]);
 
         return redirect()->back();
     }

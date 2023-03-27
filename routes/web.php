@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', DashboardController::class);
     Route::put('/users/{id?}/edit', [DashboardController::class, 'update'])->name('users.update');
     Route::post('/users/{id?}/edit', [DashboardController::class, 'schedule'])->name('users.schedule');
+    Route::get('/users/{id?}/test', [DashboardController::class, 'test'])->name('users.test');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

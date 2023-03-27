@@ -59,7 +59,6 @@
                                         right: 'prev,next today'
                                     },
 
-                                    // Haal databasegegevens vanuit op
                                     events: function(start, end, timezone, callback) {
                                         const filter = $('#filter').val();
 
@@ -72,11 +71,11 @@
                                                 filter: filter,
                                             },
 
-                                            success: function(presence) {
+                                            success: function(eventsObj) {
                                                 const events = [];
 
-                                                for (let i = 0; i < presence.length; i++) {
-                                                    const event = presence[i];
+                                                for (let i = 0; i < eventsObj.length; i++) {
+                                                    const event = eventsObj[i];
 
                                                     if (!filter || event[filter] || event.status == filter) {
                                                         events.push({
@@ -101,7 +100,6 @@
                                 });
                             });
 
-                            // Filter kalender overzicht
                             $('#filter').on('change', function() {
                                 $('#calendar').fullCalendar('refetchEvents');
                             });
