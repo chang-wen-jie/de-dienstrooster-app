@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
@@ -50,32 +51,38 @@ class DashboardController extends Controller
 
     public function schedule(int $id) {
         $start = request('start');
+        $start_formatted = Carbon::parse($start)->format('Y-m-d');
         $end = request('end');
-        $absence_reason = request('absence');
+        $absence = request('absence');
 
-        $employee_shift = Event::where('employee_id', $id)->whereDate('start', $start);
-        $test = Event::where('employee_id', $id)->first();
-        $employee_sickness = Event::where('employee_id', $id)->whereDate('start', $start)->where('sick', true)->exists();
+        $planned_shift = Event::where('employee_id', $id)->whereDate('start', $start_formatted)->where('status_id', 1);
+        $vacation = Event::where('employee_id', $id)->whereDate('start', $start_formatted)->where('status_id', 2);
+        $medical_leave = Event::where('employee_id', $id)->whereDate('start', $start_formatted)->where('sick', true);
 
-        if ($absence_reason && $employee_shift->exists()) {
-            $employee_shift->update([
-                'status_id' => $absence_reason === 'leave' ? 2 : 1,
-                'end' => $end,
-                'sick' => $absence_reason === 'sick',
-            ]);
-        } else {
-            if ($employee_sickness) {
-                return redirect()->back()->withErrors(['error' => 'Dit personeel is ziek op deze datum!']);
-            } else if ($employee_shift->exists()) {
-                return redirect()->back()->withErrors(['error' => 'Dit personeel staat al ingeroosterd op deze datum!']);
+        if ($absence && $planned_shift->exists()) {
+            if ($medical_leave->exists()) {
+                return redirect()->back()->withErrors(['error' => 'Dit personeel is al ziekgemeld op deze datum!']);
             } else {
-                dd($test->start, $start);
+                $planned_shift->update([
+                    'status_id' => $absence === 'leave' ? 2 : 1,
+                    'end' => $end,
+                    'sick' => $absence === 'sick',
+                ]);
+            }
+        } else {
+            if ($planned_shift->exists()) {
+                return redirect()->back()->withErrors(['error' => 'Dit personeel staat al ingeroosterd op deze datum!']);
+            } else if ($vacation->exists()) {
+                return redirect()->back()->withErrors(['error' => 'Dit personeel is roostervrij op deze datum!']);
+            } else if ($medical_leave->exists()) {
+                return redirect()->back()->withErrors(['error' => 'Dit personeel is ziek op deze datum!']);
+            } else {
                 Event::create([
                     'employee_id' => $id,
-                    'status_id' => $absence_reason === 'leave' ? 2 : 1,
+                    'status_id' => $absence === 'leave' ? 2 : 1,
                     'start' => $start,
                     'end' => $end,
-                    'sick' => $absence_reason === 'sick',
+                    'sick' => $absence === 'sick',
                 ]);
             }
         }
@@ -99,8 +106,8 @@ class DashboardController extends Controller
     }
 
     public function test(int $id) {
-        $employee_sickness = Event::where('employee_id', $id)->whereDate('start', now())->where('sick', true);
-        $employee_sickness->update(['sick' => false]);
+        $medical_leave = Event::where('employee_id', $id)->whereDate('start', now())->where('sick', true);
+        $medical_leave->update(['sick' => false]);
 
         return redirect()->back();
     }

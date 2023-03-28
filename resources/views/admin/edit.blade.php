@@ -7,6 +7,15 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     <section>
@@ -51,15 +60,6 @@
 
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
                     <section>
                         <header>
                             <h2 class="text-lg font-medium text-gray-900">
@@ -80,12 +80,6 @@
                             <x-input-label for="end" :value="__('Einde dienst')" />
                             <input type="datetime-local" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
                             <x-input-error class="mt-2" :messages="$errors->get('end')" />
-
-                            @if(session('message'))
-                                <div class="alert alert-success">
-                                    {{ session('message') }}
-                                </div>
-                            @endif
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>{{ __('Inroosteren') }}</x-primary-button>
