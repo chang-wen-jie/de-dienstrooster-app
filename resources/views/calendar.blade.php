@@ -14,7 +14,7 @@
                         <div class="color-bubble-container">
                             <span class="color-bubble bg-success"></span> Ingeroosterd
                             <span class="color-bubble bg-warning"></span> Roostervrij
-                            <span class="color-bubble bg-danger"></span> Ziek
+                            <span class="color-bubble bg-danger"></span> Ziek (Ingeroosterd)
                         </div>
 
                         <div class="filter-container">
@@ -29,20 +29,19 @@
                         <div id='calendar'></div>
 
                         <script>
+                            // FullCalendar API
                             $(document).ready(function() {
-                                // FUllCalendar API
                                 $('#calendar').fullCalendar({
                                     eventRender: function(event, element) {
                                         const shiftStart = moment(event.start);
-                                        // BUBBEL KLOPT SOMS NIET WANT ALS JE END OP VOLGENDE DAG DOET DAN IS END MISSCHIEN 0000
                                         const shiftEnd = moment(event.end);
 
                                         if (event.status === 1) {
-                                            if (shiftEnd.hour() <= 12) {
+                                            if (shiftStart.isSame(shiftEnd, 'day') && shiftEnd.hour() <= 12) {
                                                 element.css({
                                                     'width': '50%',
                                                 });
-                                            } else if (shiftStart.hour() >= 12) {
+                                            } else if (shiftStart.isSame(shiftEnd, 'day') && shiftStart.hour() >= 12) {
                                                 element.css({
                                                     'width': '50%',
                                                     'float': 'right',
@@ -51,7 +50,6 @@
                                         }
                                     },
 
-                                    // Kalender opmaakopties
                                     displayEventTime: false,
                                     header: {
                                         left: 'title',

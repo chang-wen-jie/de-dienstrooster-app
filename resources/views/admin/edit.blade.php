@@ -67,19 +67,29 @@
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __("Geef de start- en einddatum- en tijd van de aankomende dienst op. Ingeroosterde diensten zijn zichtbaar binnen de kalender.") }}
+                                {{ __("Geef de datum en start- en eindtijd van de aankomende dienst op. Ingeroosterde diensten zijn zichtbaar binnen de kalender.") }}
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.schedule', $employee->id) }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('users.scheduleEvent', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
-                            <x-input-label for="start" :value="__('Start dienst')" />
-                            <input type="datetime-local" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
-                            <x-input-error class="mt-2" :messages="$errors->get('start')" />
+                            <x-input-label for="shift-date" :value="__('Datum')" />
+                            <input type="date" id="shift-date" name="shift-date" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+1 year')) }}" required>
+                            <x-input-error class="mt-2" :messages="$errors->get('shift-date')" />
 
-                            <x-input-label for="end" :value="__('Einde dienst')" />
-                            <input type="datetime-local" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
-                            <x-input-error class="mt-2" :messages="$errors->get('end')" />
+                            <div class="flex gap-4">
+                                <div>
+                                    <x-input-label for="shift-start" :value="__('Starttijd')" />
+                                    <input type="time" id="shift-start" name="shift-start" required>
+                                    <x-input-error class="mt-2" :messages="$errors->get('shift-start')" />
+                                </div>
+
+                                <div>
+                                    <x-input-label for="shift-end" :value="__('Eindtijd')" />
+                                    <input type="time" id="shift-end" name="shift-end" required>
+                                    <x-input-error class="mt-2" :messages="$errors->get('shift-end')" />
+                                </div>
+                            </div>
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>{{ __('Inroosteren') }}</x-primary-button>
@@ -102,21 +112,21 @@
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.schedule', $employee->id) }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('users.scheduleEvent', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
-                            <x-input-label for="absence" :value="__('Reden')" />
-                            <select id="absence" name="absence">
+                            <x-input-label for="absence-reason" :value="__('Reden')" />
+                            <select id="absence-reason" name="absence-reason">
                                 <option value="sick">Ziek</option>
                                 <option value="leave">Vakantie</option>
                             </select>
 
-                            <x-input-label for="start" :value="__('Startdatum')" />
-                            <input type="date" id="start" name="start" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
-                            <x-input-error class="mt-2" :messages="$errors->get('start')" />
+                            <x-input-label for="absence-start" :value="__('Startdatum')" />
+                            <input type="date" id="absence-start" name="absence-start" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
+                            <x-input-error class="mt-2" :messages="$errors->get('absence-start')" />
 
-                            <x-input-label for="end" :value="__('Einddatum')" />
-                            <input type="date" id="end" name="end" min="{{ date('Y-m-d') }}T00:00" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
-                            <x-input-error class="mt-2" :messages="$errors->get('end')" />
+                            <x-input-label for="absence-end" :value="__('Einddatum')" />
+                            <input type="date" id="absence-end" name="absence-end" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+1 year')) }}T23:59" required>
+                            <x-input-error class="mt-2" :messages="$errors->get('absence-end')" />
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>{{ __('Registreren') }}</x-primary-button>

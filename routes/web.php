@@ -29,8 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/admin', [DashboardController::class, 'admin'])->name('users.admin');
     Route::resource('users', DashboardController::class);
     Route::put('/users/{id?}/edit', [DashboardController::class, 'update'])->name('users.update');
-    Route::post('/users/{id?}/edit', [DashboardController::class, 'schedule'])->name('users.schedule');
-    Route::get('/users/{id?}/test', [DashboardController::class, 'test'])->name('users.test');
+    Route::post('/users/{id?}/edit', [DashboardController::class, 'scheduleEvent'])->name('users.scheduleEvent');
+    Route::get('/users/{id?}/reportWell', [DashboardController::class, 'reportWell'])->name('users.reportWell');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

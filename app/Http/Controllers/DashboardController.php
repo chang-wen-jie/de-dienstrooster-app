@@ -16,6 +16,7 @@ class DashboardController extends Controller
         return view('dashboard', ['present_users' => $present_employees, 'absent_users' => $absent_employees]);
     }
 
+    // Personeel in- of uitchecken
     public function show(int $id) {
         $employee = Employee::findOrFail($id);
         $present = !$employee->present;
@@ -33,12 +34,14 @@ class DashboardController extends Controller
         return redirect()->back();
     }
 
+    // Personeelsgegevens ophalen
     public function edit(int $id) {
         $employee = Employee::findOrFail($id);
 
         return view('admin.edit', ['employee' => $employee]);
     }
 
+    // Personeelsgegevens veranderen
     public function update(int $id)
     {
         $employee = Employee::findOrFail($id);
@@ -49,51 +52,58 @@ class DashboardController extends Controller
         return redirect('/users/admin');
     }
 
-    public function schedule(int $id) {
-        $start = request('start');
-        $start_formatted = Carbon::parse($start)->format('Y-m-d');
-        $end = request('end');
-        $absence = request('absence');
+    // Diensten, ziekteverzuimen en vakantieverloven registreren
+    public function scheduleEvent(int $id) {
+        $shift_date = request('shift-date');
+        $shift_start = request('shift-start');
+        $shift_end = request('shift-end');
+        $shift_start_formatted = Carbon::parse($shift_date.' '.$shift_start)->format('Y-m-d H:i:s');
+        $shift_end_formatted = Carbon::parse($shift_date.' '.$shift_end)->format('Y-m-d H:i:s');
 
-        $planned_shift = Event::where('employee_id', $id)->whereDate('start', $start_formatted)->where('status_id', 1);
-        $vacation = Event::where('employee_id', $id)->whereDate('start', $start_formatted)->where('status_id', 2);
-        $medical_leave = Event::where('employee_id', $id)->whereDate('start', $start_formatted)->where('sick', true);
+        $absence_reason = request('absence-reason');
+        $absence_start = request('absence-start');
+        $absence_end = request('absence-end');
 
-        if ($absence && $planned_shift->exists()) {
-            if ($medical_leave->exists()) {
-                return redirect()->back()->withErrors(['error' => 'Dit personeel is al ziekgemeld op deze datum!']);
+        $employee_shift = Event::where('employee_id', $id)->where('status_id', 1);
+        $employee_leave = Event::where('employee_id', $id)->where('status_id', 2);
+        $employee_medical_leave = Event::where('employee_id', $id)->where('sick', true);
+
+        if ($absence_reason && $employee_shift->whereDate('start', $absence_start)->exists()) {
+            if ($absence_reason === 'leave') {
+                return redirect()->back()->withErrors(['error' => 'Dit personeel staat ingeroosterd op de startdatum!']);
             } else {
-                $planned_shift->update([
-                    'status_id' => $absence === 'leave' ? 2 : 1,
-                    'end' => $end,
-                    'sick' => $absence === 'sick',
+                $employee_shift->update([
+                    'start' => $absence_start,
+                    'end' => $absence_end,
+                    'sick' => true,
                 ]);
             }
         } else {
-            if ($planned_shift->exists()) {
+            if ($employee_shift->whereDate('start', $shift_date)->exists()) {
                 return redirect()->back()->withErrors(['error' => 'Dit personeel staat al ingeroosterd op deze datum!']);
-            } else if ($vacation->exists()) {
+            } else if ($employee_leave->whereDate('end', '>', $shift_date)->exists()) {
                 return redirect()->back()->withErrors(['error' => 'Dit personeel is roostervrij op deze datum!']);
-            } else if ($medical_leave->exists()) {
+            } else if ($employee_medical_leave->whereDate('end', '>', $shift_date)->exists()) {
                 return redirect()->back()->withErrors(['error' => 'Dit personeel is ziek op deze datum!']);
             } else {
                 Event::create([
                     'employee_id' => $id,
-                    'status_id' => $absence === 'leave' ? 2 : 1,
-                    'start' => $start,
-                    'end' => $end,
-                    'sick' => $absence === 'sick',
+                    'status_id' => $absence_reason ? 2 : 1,
+                    'start' =>  $absence_reason ? $absence_start : $shift_start_formatted,
+                    'end' => $absence_reason ? $absence_end : $shift_end_formatted,
+                    'sick' => $absence_reason === 'sick',
                 ]);
             }
         }
 
-        return redirect('/users/admin');
+        return redirect('/users/admin')->with('success', 'Aanwezigheidsgegevens zijn succesvol geregistreerd!');;
     }
 
     public function calendar() {
         return view('calendar');
     }
 
+    // Naar administratiepaneel navigeren
     public function admin() {
         $session_role = Auth::user()->role_id;
         $employees = Employee::all()->sortByDesc('active');
@@ -105,9 +115,10 @@ class DashboardController extends Controller
         return redirect()->back();
     }
 
-    public function test(int $id) {
-        $medical_leave = Event::where('employee_id', $id)->whereDate('start', now())->where('sick', true);
-        $medical_leave->update(['sick' => false]);
+    // Zieke personeel beter melden
+    public function reportWell(int $id) {
+        $employee_medical_leave = Event::where('employee_id', $id)->whereDate('start', now())->where('sick', true);
+        $employee_medical_leave->update(['sick' => false]);
 
         return redirect()->back();
     }
