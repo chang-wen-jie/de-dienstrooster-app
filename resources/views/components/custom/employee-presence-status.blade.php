@@ -6,7 +6,7 @@
         @if(date('Y-m-d', strtotime($event->start)) == date('Y-m-d'))
             @if($event->status_id === 1)
                 @php
-                    $status = $event->sick ? '<span class="text-danger">' . __('Ingeroosterd (Ziek)') . '</span><a href="'.route("users.reportWell", $employee->id).'">' . __('Beter melden') . '</a>' : __('Ingeroosterd');
+                    $status = $event->sick ? '<span class="text-danger">' . __('Ingeroosterd (Ziek)') . '</span><a href="'.route("toggleSickness", $employee->id).'">' . __('Beter melden') . '</a>' : __('Ingeroosterd');
                 @endphp
             @endif
         @endif

@@ -25,7 +25,7 @@
 
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        <a href="{{ route('users.show', $present_user->id) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('togglePresence', $present_user->id) }}" class="btn btn-primary btn-sm">
                                             {{ __('Afwezig melden') }}
                                         </a>
                                     </td>
@@ -47,7 +47,7 @@
                                         {{ Auth::user()->role_id === 1 ? date('Y-m-d H:i:s', strtotime($absent_user->last_check_in)) : date('Y-m-d', strtotime($absent_user->last_check_in)) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        <a href="{{ route('users.show', $absent_user->id) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('togglePresence', $absent_user->id) }}" class="btn btn-primary btn-sm">
                                             {{__('Aanwezig melden')}}
                                         </a>
                                     </td>

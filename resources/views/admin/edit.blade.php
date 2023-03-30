@@ -29,7 +29,7 @@
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.update', $employee->id) }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('user.update', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
                             <div>
                                 <x-input-label for="id" :value="__('Personeelsnummer')" />
@@ -71,7 +71,7 @@
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.scheduleEvent', $employee->id) }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('user.setEvent', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
                             <x-input-label for="shift-date" :value="__('Datum')" />
                             <input type="date" id="shift-date" name="shift-date" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+1 year')) }}" required>
@@ -112,7 +112,7 @@
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('users.scheduleEvent', $employee->id) }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('user.setEvent', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
                             <x-input-label for="absence-reason" :value="__('Reden')" />
                             <select id="absence-reason" name="absence-reason">

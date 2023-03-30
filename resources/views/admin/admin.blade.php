@@ -60,7 +60,7 @@
                                         {{ $checked_in ? $date1 : $date2 }} <b>({{ $checked_in ? 'Ingecheckt' : 'Uitgecheckt' }})</b>
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        <a href="{{ route('users.edit', $employee->id)}}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('admin.edit', $employee->id)}}" class="btn btn-primary btn-sm">
                                             Acties
                                         </a>
                                     </td>

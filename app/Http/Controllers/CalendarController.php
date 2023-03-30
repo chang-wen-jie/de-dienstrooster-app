@@ -11,7 +11,7 @@ class CalendarController extends Controller
         return view('calendar');
     }
 
-    public function events(Request $request)
+    public function fetchEvents(Request $request)
     {
         /**
          * Haalt de huidige start- en einddatum van de geselecteerde datumbereik op.

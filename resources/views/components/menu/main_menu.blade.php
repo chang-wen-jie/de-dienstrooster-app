@@ -8,7 +8,7 @@
     </x-nav-link>
 
     @if (auth()->user()->role_id === 1)
-        <x-nav-link :href="route('users.admin')" :active="request()->routeIs('users.admin')">
+        <x-nav-link :href="route('admin')" :active="request()->routeIs('admin')">
             {{ __('Administratief') }}
         </x-nav-link>
     @endif

@@ -61,7 +61,7 @@
                                         const filter = $('#filter').val();
 
                                         $.ajax({
-                                            url: '/events',
+                                            url: '/calendar/fetchEvents',
                                             dataType: 'json',
                                             data: {
                                                 start: start.format(),
