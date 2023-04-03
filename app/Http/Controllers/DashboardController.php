@@ -36,7 +36,7 @@ class DashboardController extends Controller
     /**
      * Ziekgemelde personeel beter melden.
      */
-    public function toggleSickness(int $id) {
+    public function reportRecovery(int $id) {
         $employee_medical_leave = Event::where('employee_id', $id)->whereDate('start', now())->where('sick', true);
         $employee_medical_leave->update(['sick' => false]);
 

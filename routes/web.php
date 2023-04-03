@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('dashboard/users');
+    return redirect('dashboard');
 });
 
 Route::middleware('auth')->group(function () {
@@ -27,16 +27,16 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/togglePresence/{id}', [DashboardController::class, 'togglePresence'])->name('togglePresence');
-    Route::get('/dashboard/toggleSickness/{id}', [DashboardController::class, 'toggleSickness'])->name('toggleSickness');
+    Route::get('/dashboard/user/{id}/togglePresence', [DashboardController::class, 'togglePresence'])->name('togglePresence');
+    Route::get('/dashboard/user/{id}/reportRecovery', [DashboardController::class, 'reportRecovery'])->name('reportRecovery');
 
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
     Route::get('/calendar/fetchEvents', [CalendarController::class, 'fetchEvents']);
 
     Route::resource('admin', AdminController::class);
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-    Route::put('/admin/user/{id}/edit', [AdminController::class, 'update'])->name('user.update');
-    Route::post('/admin/user/{id}/edit', [AdminController::class, 'setEvent'])->name('user.setEvent');
+    Route::put('/admin/user/{id}/edit', [AdminController::class, 'updateUser'])->name('updateUser');
+    Route::post('/admin/user/{id}/edit', [AdminController::class, 'setEvent'])->name('setEvent');
 });
 
 require __DIR__.'/auth.php';

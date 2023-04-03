@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Event;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
@@ -33,14 +32,14 @@ class AdminController extends Controller
     /**
      * Personeelsgegevens aanpassen.
      */
-    public function update(int $id)
+    public function updateUser(int $id)
     {
         $employee = Employee::findOrFail($id);
         $input = request('name');
         $checkbox = request('active');
         $employee->update(['name' => $input, 'active' => $checkbox]);
 
-        return redirect('/dashboard')->with('success', 'De personeelsgegevens zijn succesvol aangepast.');
+        return redirect('/admin')->with('success', 'De personeelsgegevens zijn succesvol aangepast.');
     }
 
     /**
@@ -71,7 +70,7 @@ class AdminController extends Controller
                     'sick' => true,
                 ]);
 
-                return redirect('/dashboard')->with(['success' => 'De ziekmelding is succesvol geregistreerd.']);
+                return redirect('/admin')->with(['success' => 'De ziekmelding is succesvol geregistreerd.']);
             }
         } else {
             if ($employee_shift->whereDate('start', $shift_date)->exists()) {
@@ -80,7 +79,7 @@ class AdminController extends Controller
                     'end' => $shift_end_formatted,
                 ]);
 
-                return redirect('/user/admin')->with(['success' => 'De ingeroosterde dienst is succesvol aangepast.']);
+                return redirect('/admin')->with(['success' => 'De ingeroosterde dienst is succesvol aangepast.']);
             } else if ($employee_leave->whereDate('end', '>', $shift_date)->exists()) {
                 return redirect()->back()->withErrors(['error' => 'Dit personeel is roostervrij op deze datum!']);
             } else if ($employee_medical_leave->whereDate('end', '>', $shift_date)->exists()) {
@@ -94,7 +93,7 @@ class AdminController extends Controller
                     'sick' => $absence_reason === 'sick',
                 ]);
 
-                return redirect('/dashboard')->with(['success' => 'De dienst is succesvol ingeroosterd.']);
+                return redirect('/admin')->with(['success' => 'De dienst is succesvol ingeroosterd.']);
             }
         }
     }
