@@ -35,8 +35,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('admin', AdminController::class);
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-    Route::put('/admin/user/{id}/edit', [AdminController::class, 'updateUser'])->name('updateUser');
-    Route::post('/admin/user/{id}/edit', [AdminController::class, 'setEvent'])->name('setEvent');
+    Route::put('/admin/user/{id}/updateUser', [AdminController::class, 'updateUser'])->name('updateUser');
+    Route::post('/admin/user/{id}/setEvent', [AdminController::class, 'setEvent'])->name('setEvent');
+    Route::post('/admin/user/{id}/setSchedule', [AdminController::class, 'setSchedule'])->name('setSchedule');
 });
 
 require __DIR__.'/auth.php';

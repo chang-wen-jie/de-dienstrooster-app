@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use App\Models\Event;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->role_id === 1) {
+        if (Auth::user()->role_id === 1)
+        {
             $employees = Employee::all()->sortByDesc('active');
 
             return view('admin.admin', ['employees' => $employees]);
@@ -23,7 +26,8 @@ class AdminController extends Controller
     /**
      * Personeelsgegevens ophalen.
      */
-    public function edit(int $id) {
+    public function edit(int $id)
+    {
         $employee = Employee::findOrFail($id);
 
         return view('admin.edit', ['employee' => $employee]);
@@ -45,7 +49,8 @@ class AdminController extends Controller
     /**
      * Diensten inroosteren en afwezigheden registreren.
      */
-    public function setEvent(int $id) {
+    public function setEvent(int $id)
+    {
         $shift_date = request('shift-date');
         $shift_start = request('shift-start');
         $shift_end = request('shift-end');
@@ -96,5 +101,32 @@ class AdminController extends Controller
                 return redirect('/admin')->with(['success' => 'De dienst is succesvol ingeroosterd.']);
             }
         }
+    }
+
+    public function setSchedule(Request $request, $employee_id)
+    {
+        $employee = Employee::findOrFail($employee_id);
+
+        $scheduleData = [];
+
+        foreach (['monday', 'tuesday'] as $day) {
+            $shiftStart = $request->input('shift-start-' . $day);
+            $shiftEnd = $request->input('shift-end-' . $day);
+
+
+            if ($shiftStart && $shiftEnd) {
+                $scheduleData[] = [
+                    'employee_id' => $employee->id,
+                    'day_of_week' => $day,
+                    'type_of_week' => $request->input('type_of_week'),
+                    'shift_start_time' => $shiftStart,
+                    'shift_end_time' => $shiftEnd,
+                ];
+            }
+        }
+
+        $employee->schedule()->createMany($scheduleData);
+
+        return redirect()->back()->with('success', 'Schedule set successfully!');
     }
 }

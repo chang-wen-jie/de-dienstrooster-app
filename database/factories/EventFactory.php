@@ -17,7 +17,7 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
-        $start = Carbon::now()->month(3)->day(rand(1, 31))->hour(rand(9, 16))->minute(0)->second(0);
+        $start = Carbon::now()->month(4)->day(rand(1, 31))->hour(rand(9, 16))->minute(0)->second(0);
         $start_max_hours= 17 - $start->hour;
         $start_max_minutes = ($start_max_hours* 60) - $start->minute;
         $start_max_seconds = ($start_max_minutes * 60) - $start->second;

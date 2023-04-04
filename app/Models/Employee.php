@@ -26,4 +26,9 @@ class Employee extends Authenticatable
     {
         return $this->hasMany(Event::class, 'employee_id', 'id');
     }
+
+    public function schedule()
+    {
+        return $this->hasMany(Schedule::class);
+    }
 }
