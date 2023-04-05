@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->nullable()->constrained('employees');
-            $table->foreignId('event_id')->nullable()->constrained('events');
             $table->enum('day_of_week', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']);
             $table->enum('type_of_week', ['odd', 'even']);
-            $table->time('shift_start_time')->nullable();
-            $table->time('shift_end_time')->nullable();
+            $table->time('shift_time_start');
+            $table->time('shift_time_end');
             $table->timestamps();
         });
     }

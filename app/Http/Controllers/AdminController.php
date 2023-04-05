@@ -7,7 +7,6 @@ use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -103,29 +102,60 @@ class AdminController extends Controller
         }
     }
 
-    public function setSchedule(Request $request, $employee_id)
+    public function setSchedule(Request $request, $id)
     {
-        $employee = Employee::findOrFail($employee_id);
+        $employee = Employee::findOrFail($id);
 
-        $scheduleData = [];
+        $isEvenWeek = $request->input('type_of_week') === 'even';
 
-        foreach (['monday', 'tuesday'] as $day) {
+        foreach ($request->input('day_of_week') as $day) {
+            $existingSchedule = $employee->schedule()->where('day_of_week', $day)->first();
+
             $shiftStart = $request->input('shift-start-' . $day);
             $shiftEnd = $request->input('shift-end-' . $day);
 
-
             if ($shiftStart && $shiftEnd) {
-                $scheduleData[] = [
+                $scheduleData = [
                     'employee_id' => $employee->id,
                     'day_of_week' => $day,
                     'type_of_week' => $request->input('type_of_week'),
-                    'shift_start_time' => $shiftStart,
-                    'shift_end_time' => $shiftEnd,
+                    'shift_time_start' => $shiftStart,
+                    'shift_time_end' => $shiftEnd,
                 ];
+
+                if ($existingSchedule) {
+                    $existingSchedule->update($scheduleData);
+                } else {
+                    $employee->schedule()->create($scheduleData);
+                }
+
+                if ($isEvenWeek && !$existingSchedule) {
+                    $now = Carbon::now();
+                    $endOfYear = Carbon::create($now->year, 12, 31);
+
+                    $weeksUntilEndOfYear = $endOfYear->diffInWeeks($now);
+
+                    // DAG ALTIJD MAANDAG?
+                    for ($i = 2; $i <= $weeksUntilEndOfYear; $i += 2) {
+                        $startOfWeek = $now->copy()->addWeeks($i)->startOfWeek();
+                        $start = $startOfWeek->copy()->setTimeFromTimeString($shiftStart);
+                        $end = $startOfWeek->copy()->setTimeFromTimeString($shiftEnd);
+
+                        $eventData = [
+                            'employee_id' => $employee->id,
+                            'status_id' => 1,
+                            'start' => $start,
+                            'end' => $end,
+                            'sick' => false,
+                        ];
+
+                        Event::create($eventData);
+                    }
+                }
+            } elseif ($existingSchedule) {
+                $existingSchedule->delete();
             }
         }
-
-        $employee->schedule()->createMany($scheduleData);
 
         return redirect()->back()->with('success', 'Schedule set successfully!');
     }

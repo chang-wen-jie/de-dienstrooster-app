@@ -12,12 +12,12 @@ class Schedule extends Model
     protected $fillable = [
         'type_of_week',
         'day_of_week',
-        'shift_start_time',
-        'shift_end_time',
+        'shift_time_start',
+        'shift_time_end',
     ];
 
     public function employee()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->hasOne(Employee::class, 'id', 'employee_id');
     }
 }

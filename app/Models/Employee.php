@@ -15,7 +15,6 @@ class Employee extends Authenticatable
         'email_verified_at',
         'password',
         'remember_token',
-        'role_id',
         'last_check_in',
         'last_check_out',
         'present',
@@ -29,6 +28,6 @@ class Employee extends Authenticatable
 
     public function schedule()
     {
-        return $this->hasMany(Schedule::class);
+        return $this->hasMany(Schedule::class, 'employee_id', 'id');
     }
 }
