@@ -2,7 +2,7 @@
 @if (isset($employee))
     @php $status = __('Roostervrij'); @endphp
     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-    @foreach($employee->events as $event)
+    @foreach($employee->event as $event)
         @if(date('Y-m-d', strtotime($event->start)) == date('Y-m-d'))
             @if($event->status_id === 1)
                 @php

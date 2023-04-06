@@ -21,7 +21,7 @@ class Employee extends Authenticatable
         'active',
     ];
 
-    public function events()
+    public function event()
     {
         return $this->hasMany(Event::class, 'employee_id', 'id');
     }
