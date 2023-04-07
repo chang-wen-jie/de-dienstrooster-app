@@ -38,7 +38,7 @@ class AdminController extends Controller
     /**
      * Personeelsgegevens aanpassen.
      */
-    public function updateEmployee(Request $request, int $id)
+    public function update(Request $request, int $id)
     {
         $employee = Employee::findOrFail($id);
 
@@ -59,52 +59,57 @@ class AdminController extends Controller
         $shift_date = $request->input('shift-date');
         $shift_time_start = $request->input('shift-time-start');
         $shift_time_end = $request->input('shift-time-end');
-        $shift_time_start_formatted = Carbon::parse($shift_date.' '.$shift_time_start)->format('Y-m-d H:i:s');
-        $shift_time_end_formatted = Carbon::parse($shift_date.' '.$shift_time_end)->format('Y-m-d H:i:s');
+        $shift_start = Carbon::parse($shift_date.' '.$shift_time_start)->format('Y-m-d H:i:s');
+        $shift_end = Carbon::parse($shift_date.' '.$shift_time_end)->format('Y-m-d H:i:s');
 
         $absence_reason = $request->input('absence-reason');
-        $absence_date_start = $request->input('absence-date-start');
-        $absence_date_end = $request->input('absence-date-end');
+        $absence_start = $request->input('absence-date-start');
+        $absence_end = $request->input('absence-date-end');
 
-        $employee_shift = $employee->event()->where(['employee_id' => $id, 'status_id' => 1]);
-        $employee_leave = $employee->event()->where(['employee_id' => $id, 'status_id'=> 2]);
-        $employee_medical_leave = $employee->event()->where(['employee_id' => $id, 'sick' => true]);
+        $employee_shifts = $employee->event()->where(['status_id' => 1])->get();
+        $employee_leaves = $employee->event()->where(['status_id'=> 2])->get();
 
-        if ($absence_reason && $employee_shift->whereDate('start', $absence_date_start)->exists()) {
-            if ($absence_reason === 'leave') {
-                return redirect()->back()->withErrors(['error' => 'Dit personeel staat ingeroosterd op deze startdatum!']);
-            } else {
-                $employee_shift->whereDate('start', $absence_date_start)->update([
-                    'start' => $absence_date_start,
-                    'end' => $absence_date_end,
-                    'sick' => true,
-                ]);
+        if ($absence_reason && $employee_shifts) {
+            foreach ($employee_shifts as $employee_shift) {
+                $affected_employee_scheduled_shift = $employee_shift->whereDate('end', '<=', $absence_end);
 
-                return redirect()->back()->with(['success' => 'De ziekmelding is succesvol geregistreerd.']);
+                if ($affected_employee_scheduled_shift->exists()) {
+                    $affected_employee_scheduled_shift->first()->delete();
+                }
             }
+
+            $absence_data = [
+                'status_id' => $absence_reason === 'leave' ? 2 : 1,
+                'start' => $absence_start,
+                'end' => $absence_end,
+                'sick' => $absence_reason === 'sick',
+            ];
+            $employee->event()->create($absence_data);
+
+            return redirect()->back()->with(['success' => 'De absentie is succesvol geregistreerd.']);
+        } else if ($employee_shifts->first()->whereDate('start', $shift_date)->exists()) {
+            $shift_data = [
+                'start' => $shift_start,
+                'end' => $shift_end,
+            ];
+
+            $employee_shifts->whereDate('start', $shift_date)->first()->update($shift_data);
+
+            return redirect()->back()->with(['success' => 'De dienst is succesvol aangepast.']);
+        } else if ($employee_leaves->first()->whereDate('end', '>', $shift_date)->exists()) {
+            return redirect()->back()->withErrors(['error' => 'Dit personeel is roostervrij op deze datum!']);
         } else {
-            if ($employee_shift->whereDate('start', $shift_date)->exists()) {
-                $employee_shift->whereDate('start', $shift_date)->update([
-                    'start' => $shift_time_start_formatted,
-                    'end' => $shift_time_end_formatted,
-                ]);
+            $shift_data = [
+                'employee_id' => $employee->id,
+                'status_id' => $absence_reason ? 2 : 1,
+                'start' => $absence_reason ? $absence_start : $shift_start,
+                'end' => $absence_reason ? $absence_end : $shift_end,
+                'sick' => $absence_reason === 'sick',
+            ];
 
-                return redirect()->back()->with(['success' => 'De ingeroosterde dienst is succesvol aangepast.']);
-            } else if ($employee_leave->whereDate('end', '>', $shift_date)->exists()) {
-                return redirect()->back()->withErrors(['error' => 'Dit personeel is roostervrij op deze datum!']);
-            } else if ($employee_medical_leave->whereDate('end', '>', $shift_date)->exists()) {
-                return redirect()->back()->withErrors(['error' => 'Dit personeel staat ziekgemeld op deze datum!']);
-            } else {
-                $employee->event()->create([
-                    'employee_id' => $id,
-                    'status_id' => $absence_reason ? 2 : 1,
-                    'start' =>  $absence_reason ? $absence_date_start : $shift_time_start_formatted,
-                    'end' => $absence_reason ? $absence_date_end : $shift_time_end_formatted,
-                    'sick' => $absence_reason === 'sick',
-                ]);
+            $employee->event()->create($shift_data);
 
-                return redirect()->back()->with(['success' => 'De dienst is succesvol ingeroosterd.']);
-            }
+            return redirect()->back()->with(['success' => 'De dienst is succesvol ingeroosterd.']);
         }
     }
 
@@ -115,19 +120,19 @@ class AdminController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
-        $day_of_week = $request->input('day-of-week');
+        $days_of_week = $request->input('days-of-week');
         $type_of_week = $request->input('type-of-week');
 
-        foreach ($day_of_week as $day) {
-            $shift_time_start = $request->input('shift-time-start-' . $day);
-            $shift_time_end = $request->input('shift-time-end-' . $day);
+        foreach ($days_of_week as $day_of_week) {
+            $shift_time_start = $request->input('shift-time-start-' . $day_of_week);
+            $shift_time_end = $request->input('shift-time-end-' . $day_of_week);
 
-            $employee_scheduled_shift = $employee->schedule()->where(['day_of_week' => $day, 'type_of_week' => $type_of_week])->first();
+            $employee_scheduled_shift = $employee->schedule()->where(['day_of_week' => $day_of_week, 'type_of_week' => $type_of_week])->first();
 
             if ($shift_time_start && $shift_time_end) {
                 $scheduled_shift_data = [
                     'employee_id' => $employee->id,
-                    'day_of_week' => $day,
+                    'day_of_week' => $day_of_week,
                     'type_of_week' => $type_of_week,
                     'shift_time_start' => $shift_time_start,
                     'shift_time_end' => $shift_time_end,
@@ -141,7 +146,7 @@ class AdminController extends Controller
 
                 $current_date = Carbon::now();
                 $year_end = Carbon::create($current_date->year, 12, 31);
-                $scheduled_day = Carbon::parse($day);
+                $scheduled_day = Carbon::parse($day_of_week);
 
                 $weeks_in_between = $type_of_week === 'odd' ? 1 : 2;
                 $weeks_remaining = $year_end->diffInWeeks($current_date);

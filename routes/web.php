@@ -35,7 +35,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('admin', AdminController::class);
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-    Route::put('/admin/user/{id}/updateEmployee', [AdminController::class, 'updateEmployee'])->name('updateEmployee');
+    Route::put('/admin/user/{id}/update', [AdminController::class, 'update'])->name('update');
     Route::post('/admin/user/{id}/setEvent', [AdminController::class, 'setEvent'])->name('setEvent');
     Route::post('/admin/user/{id}/setSchedule', [AdminController::class, 'setSchedule'])->name('setSchedule');
 });

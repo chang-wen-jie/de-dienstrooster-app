@@ -32,7 +32,7 @@
                             </p>
                         </header>
 
-                        <form method="post" action="{{ route('updateEmployee', $employee->id) }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('update', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
                             <div>
                                 <x-input-label for="id" :value="__('Personeelsnummer')" />
@@ -113,7 +113,7 @@
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __("Geef het datumbereik gepaard met de afwezigheidsreden op. Geregistreerde afwezigheden zijn zichtbaar binnen de kalender.") }}
+                                {{ __("Geef aan tot welk datum de afwezigheid zal plaatsvinden gepaard met de afwezigheidsreden op. Geregistreerde afwezigheden zijn zichtbaar binnen de kalender.") }}
                             </p>
                         </header>
 
@@ -167,7 +167,7 @@
                             @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as $day)
                                 @php $employee_scheduled_shift = $employee->schedule()->where('day_of_week', $day)->where('type_of_week', 'odd')->first(); @endphp
                                 <div>
-                                    <input type="hidden" name="day-of-week[]" value="{{ $day }}">
+                                    <input type="hidden" name="days-of-week[]" value="{{ $day }}">
                                     <x-input-label for="shift-time-start-{{ $day }}" :value="__(ucfirst($day))" />
                                     <div class="flex gap-4">
                                         <div>
@@ -197,7 +197,7 @@
                             @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as $day)
                                 @php $employee_scheduled_shift = $employee->schedule()->where('day_of_week', $day)->where('type_of_week', 'even')->first(); @endphp
                                 <div>
-                                    <input type="hidden" name="day-of-week[]" value="{{ $day }}">
+                                    <input type="hidden" name="days-of-week[]" value="{{ $day }}">
                                     <x-input-label for="shift-time-start-{{ $day }}" :value="__(ucfirst($day))" />
                                     <div class="flex gap-4">
                                         <div>
