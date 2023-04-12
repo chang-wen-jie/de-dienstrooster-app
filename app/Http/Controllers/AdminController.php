@@ -124,35 +124,25 @@ class AdminController extends Controller
         $week_type = $request->input('week-type');
 
         foreach ($week_days as $week_day) {
+            $employee_scheduled_shift = $employee->schedule()->where(['week_day' => $week_day, 'week_type' => $week_type])->first();
+
             $shift_start_time = $request->input('shift-start-time-' . $week_day);
             $shift_end_time = $request->input('shift-end-time-' . $week_day);
-            $schedule_start_date = $request->input('schedule-start-date');
-            $schedule_end_date = $request->input('schedule-end-date');
-
-            $employee_scheduled_shift = $employee->schedule()->where(['week_day' => $week_day, 'type_of_week' => $week_type])->first();
 
             if ($shift_start_time && $shift_end_time)
             {
-                $scheduled_shift_data = [
-                    'employee_id' => $employee->id,
-                    'day_of_week' => $week_day,
-                    'type_of_week' => $week_type,
-                    'shift_time_start' => $shift_start_time,
-                    'shift_time_end' => $shift_end_time,
-                ];
-
-                if ($employee_scheduled_shift) {
-                    $employee_scheduled_shift->update($scheduled_shift_data);
-                } else {
-                    $employee->schedule()->create($scheduled_shift_data);
-                }
-
+                $schedule_start_date = $request->input('schedule-start-date');
+                $schedule_end_date = $request->input('schedule-end-date');
                 $scheduling_start_date = Carbon::parse($schedule_start_date);
                 $scheduling_end_date = Carbon::parse($schedule_end_date);
                 $scheduled_day = Carbon::parse($week_day);
 
                 $weeks_between = $week_type === 'odd' ? 1 : 2;
                 $weeks_remaining = $scheduling_end_date->diffInWeeks($scheduling_start_date);
+
+                if (request()->has('schedule-next-year')) {
+                    dd($week_days, $week_type, $shift_start_time, $shift_end_time);
+                }
 
                 for ($i = $weeks_between; $i <= $weeks_remaining; $i += 2) {
                     $scheduled_shift_date = $scheduling_start_date->copy()->addWeeks($i)->startOfDay()->addDays($scheduled_day->dayOfWeek - $scheduling_start_date->dayOfWeek);
@@ -175,9 +165,21 @@ class AdminController extends Controller
                         $employee->event()->create($event_data);
                     }
                 }
+                $scheduled_shift_data = [
+                    'employee_id' => $employee->id,
+                    'week_day' => $week_day,
+                    'week_type' => $week_type,
+                    'shift_start_time' => $shift_start_time,
+                    'shift_end_time' => $shift_end_time,
+                ];
+
+                if ($employee_scheduled_shift) {
+                    $employee_scheduled_shift->update($scheduled_shift_data);
+                } else {
+                    $employee->schedule()->create($scheduled_shift_data);
+                }
             } elseif ($employee_scheduled_shift) {
-                // ANDERSOM NU
-                $employee_upcoming_shifts = $employee->event()->whereDate('start', '>', now())->whereRaw('WEEK(start, 3) % 2 != 0 AND DAYNAME(start) = ?', [$week_day]);
+                $employee_upcoming_shifts = $employee->event()->whereDate('start', '>', now());
 
                 $employee_upcoming_shifts->delete();
                 $employee_scheduled_shift->delete();
