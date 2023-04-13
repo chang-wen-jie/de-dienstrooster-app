@@ -120,69 +120,75 @@ class AdminController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
-        $week_days = $request->input('week-days');
+        $weekdays = $request->input('weekdays');
         $week_type = $request->input('week-type');
 
-        foreach ($week_days as $week_day) {
-            $employee_scheduled_shift = $employee->schedule()->where(['week_day' => $week_day, 'week_type' => $week_type])->first();
+        $schedule_next_year = request()->has('schedule-next-year');
 
-            $shift_start_time = $request->input('shift-start-time-' . $week_day);
-            $shift_end_time = $request->input('shift-end-time-' . $week_day);
+        if ($schedule_next_year && !$weekdays) {
+            return redirect()->back()->withErrors(['error' => 'Er is nog geen basisrooster opgesteld voor dit personeel!']);
+        } else {
+            foreach ($weekdays as $weekday) {
+                $employee_scheduled_shift = $employee->schedule()->where(['weekday' => $weekday, 'week_type' => $week_type])->first();
 
-            if ($shift_start_time && $shift_end_time)
-            {
-                $schedule_start_date = $request->input('schedule-start-date');
-                $schedule_end_date = $request->input('schedule-end-date');
-                $scheduling_start_date = Carbon::parse($schedule_start_date);
-                $scheduling_end_date = Carbon::parse($schedule_end_date);
-                $scheduled_day = Carbon::parse($week_day);
+                $shift_start_time = $request->input('shift-start-time-' . $weekday);
+                $shift_end_time = $request->input('shift-end-time-' . $weekday);
 
-                $weeks_between = $week_type === 'odd' ? 1 : 2;
-                $weeks_remaining = $scheduling_end_date->diffInWeeks($scheduling_start_date);
+                if ($shift_start_time && $shift_end_time)
+                {
+                    $schedule_start = $request->input('schedule-start-date');
+                    $schedule_end = $request->input('schedule-end-date');
 
-                if (request()->has('schedule-next-year')) {
-                    dd($week_days, $week_type, $shift_start_time, $shift_end_time);
-                }
+                    $scheduling_start = Carbon::parse($schedule_start);
+                    $scheduling_end = Carbon::parse($schedule_end);
+                    $scheduled_day = Carbon::parse($weekday);
 
-                for ($i = $weeks_between; $i <= $weeks_remaining; $i += 2) {
-                    $scheduled_shift_date = $scheduling_start_date->copy()->addWeeks($i)->startOfDay()->addDays($scheduled_day->dayOfWeek - $scheduling_start_date->dayOfWeek);
-                    $scheduled_shift_start = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_start_time)->toDateTime();
-                    $scheduled_shift_end = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_end_time)->toDateTime();
+                    $weeks_between = $week_type === 'odd' ? 1 : 2;
+                    $weeks_remaining = $scheduling_end->diffInWeeks($scheduling_start);
 
-                    $event_data = [
+                    for ($i = $weeks_between; $i <= $weeks_remaining; $i += 2) {
+                        $scheduled_shift_date = $schedule_next_year
+                            ? $scheduling_start->copy()->addYear()->addWeeks($i)->next($scheduled_day->format('l'))
+                            : $scheduling_start->copy()->addWeeks($i)->addDays($scheduled_day->dayOfWeek - $scheduling_start->dayOfWeek)->startOfDay();
+
+                        $scheduled_shift_start = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_start_time)->toDateTime();
+                        $scheduled_shift_end = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_end_time)->toDateTime();
+
+                        $event_data = [
+                            'employee_id' => $employee->id,
+                            'status_id' => 1,
+                            'start' => $scheduled_shift_start,
+                            'end' => $scheduled_shift_end,
+                            'sick' => false,
+                        ];
+
+                        $employee_existing_shift = $employee->event()->whereDate('start', $scheduled_shift_start)->first();
+
+                        if ($employee_existing_shift) {
+                            $employee_existing_shift->update($event_data);
+                        } else {
+                            $employee->event()->create($event_data);
+                        }
+                    }
+                    $scheduled_shift_data = [
                         'employee_id' => $employee->id,
-                        'status_id' => 1,
-                        'start' => $scheduled_shift_start,
-                        'end' => $scheduled_shift_end,
-                        'sick' => false,
+                        'weekday' => $weekday,
+                        'week_type' => $week_type,
+                        'shift_start_time' => $shift_start_time,
+                        'shift_end_time' => $shift_end_time,
                     ];
 
-                    $employee_existing_shift = $employee->event()->whereDate('start', $scheduled_shift_start)->first();
-
-                    if ($employee_existing_shift) {
-                        $employee_existing_shift->update($event_data);
+                    if ($employee_scheduled_shift) {
+                        $employee_scheduled_shift->update($scheduled_shift_data);
                     } else {
-                        $employee->event()->create($event_data);
+                        $employee->schedule()->create($scheduled_shift_data);
                     }
-                }
-                $scheduled_shift_data = [
-                    'employee_id' => $employee->id,
-                    'week_day' => $week_day,
-                    'week_type' => $week_type,
-                    'shift_start_time' => $shift_start_time,
-                    'shift_end_time' => $shift_end_time,
-                ];
+                } elseif ($employee_scheduled_shift) {
+                    $employee_upcoming_shifts = $employee->event()->whereDate('start', '>', now());
 
-                if ($employee_scheduled_shift) {
-                    $employee_scheduled_shift->update($scheduled_shift_data);
-                } else {
-                    $employee->schedule()->create($scheduled_shift_data);
+                    $employee_upcoming_shifts->delete();
+                    $employee_scheduled_shift->delete();
                 }
-            } elseif ($employee_scheduled_shift) {
-                $employee_upcoming_shifts = $employee->event()->whereDate('start', '>', now());
-
-                $employee_upcoming_shifts->delete();
-                $employee_scheduled_shift->delete();
             }
         }
 

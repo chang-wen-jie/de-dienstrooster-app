@@ -11,7 +11,7 @@ class Schedule extends Model
 
     protected $fillable = [
         'employee_id',
-        'week_day',
+        'weekday',
         'week_type',
         'shift_start_time',
         'shift_end_time',
