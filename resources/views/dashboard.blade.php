@@ -34,7 +34,7 @@
                             </tbody>
                         </table>
 
-                        Afwezigen ({{ count($absent_users) }})
+                        {{ __('Afwezigen') }} ({{ count($absent_users) }})
                         <table class="min-w-full divide-y divide-gray-200 border">
                             <tbody class="bg-red-300 divide-y divide-gray-200 divide-solid">
                             @foreach($absent_users as $absent_user)

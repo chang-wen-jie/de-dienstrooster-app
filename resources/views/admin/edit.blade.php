@@ -162,7 +162,7 @@
 
                         <form method="post" action="{{ route('setSchedule', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
-                            Oneven weken
+                            {{ __('Oneven weken') }}
                             <input type="hidden" name="week-type" value="odd">
                             @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as $weekday)
                                 @php $employee_scheduled_shift = $employee->schedule()->where('weekday', $weekday)->where('week_type', 'odd')->first(); @endphp
@@ -209,7 +209,7 @@
 
                         <form method="post" action="{{ route('setSchedule', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
-                            Even weken
+                            {{ __('Even weken') }}
                             <input type="hidden" name="week-type" value="even">
                             @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as $weekday)
                                 @php $employee_scheduled_shift = $employee->schedule()->where('weekday', $weekday)->where('week_type', 'even')->first(); @endphp
