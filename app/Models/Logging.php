@@ -5,13 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Rfidtoken extends Model
+class Logging extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'uid',
-        'aa_status',
         'name',
+        'aa_old_status',
+        'aa_new_status',
+        'duration_minutes',
+        'logged_at',
     ];
+
+    protected $dates = ['logged_at'];
 }

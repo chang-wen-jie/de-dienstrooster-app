@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
             Schema::create('rfidtoken', function (Blueprint $table) {
-                $table->id('uid');
+                $table->id();
+                $table->string('uid');
                 $table->string('aa_status');
                 $table->string('name');
                 $table->timestamps();

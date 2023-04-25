@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('logging', function (Blueprint $table) {
-            $table->id('log_id');
+            $table->id();
             $table->string('uid');
+            $table->foreignId('employee_id')->nullable()->constrained('employees');
             $table->string('name');
             $table->string('aa_old_status');
             $table->string('aa_new_status');
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->timestamp('logged_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
 
-            $table->index(['uid', 'aa_new_status', 'logged_at']);
+            $table->index(['aa_new_status', 'logged_at']);
             $table->index(['logged_at', 'aa_new_status', 'uid']);
         });
     }
