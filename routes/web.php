@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\APIController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
@@ -38,6 +39,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/user/{id}/update', [AdminController::class, 'update'])->name('update');
     Route::post('/admin/user/{id}/setEvent', [AdminController::class, 'setEvent'])->name('setEvent');
     Route::post('/admin/user/{id}/setSchedule', [AdminController::class, 'setSchedule'])->name('setSchedule');
+
+    Route::get('/api', [APIController::class, 'index'])->name('api');
+    Route::post('/api/v1/users/{apiKey}/', [APIController::class, 'connectAPI'])->name('connectAPI');
 });
 
 require __DIR__.'/auth.php';
