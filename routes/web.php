@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/user/{id}/setSchedule', [AdminController::class, 'setSchedule'])->name('setSchedule');
 
     Route::get('/api', [APIController::class, 'index'])->name('api');
-    Route::post('/api/v1/users/{apiKey}/', [APIController::class, 'connectAPI'])->name('connectAPI');
+    Route::get('/api/v1/users/{apiKey}/', [APIController::class, 'connectAPI'])->name('connectAPI');
 });
 
 require __DIR__.'/auth.php';

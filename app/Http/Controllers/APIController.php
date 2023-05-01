@@ -27,6 +27,8 @@ class APIController extends Controller
      * Microcontroller API connectie.
      */
     public function connectAPI(Request $request, int $id) {
+        return $id;
+
         $api_key = $request->input('api-key');
         $rfid_token = $request->input('rfid-token');
 
