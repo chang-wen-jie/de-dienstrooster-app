@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('employee_id')->nullable()->constrained('employees');
             $table->string('presence_state');
-            $table->integer('activity_duration_minutes');
+            $table->integer('session_duration_minutes');
             $table->timestamps();
         });
     }

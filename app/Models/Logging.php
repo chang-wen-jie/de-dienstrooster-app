@@ -12,7 +12,7 @@ class Logging extends Model
     protected $fillable = [
         'employee_id',
         'presence_state',
-        'activity_duration_minutes',
+        'session_duration_minutes',
     ];
 
     public function employee()

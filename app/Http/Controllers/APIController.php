@@ -26,9 +26,9 @@ class APIController extends Controller
 
             $employee->update(['present' => $present]);
 
-            $last_activity = strtotime($employee->updated_at);
-            $activity_datetime = strtotime('now');
-            $activity_duration = intval( ($activity_datetime - $last_activity) / 60 );
+            $previous_activity_time = strtotime($employee->updated_at);
+            $current_activity_time = strtotime('now');
+            $session_duration_minutes = intval($current_activity_time - $previous_activity_time / 60 );
         } else {
             return 'Er is geen personeel dat overeenkomt met een personeelsnummer ' . $employee_id;
         }
@@ -36,7 +36,7 @@ class APIController extends Controller
         $logging_data = [
             'employee_id' => $id,
             'presence_state' => $presence_state,
-            'activity_duration_minutes' => $activity_duration,
+            'session_duration_minutes' => $session_duration_minutes,
         ];
         $employee->logging()->create($logging_data);
     }
