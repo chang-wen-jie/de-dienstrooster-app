@@ -19,10 +19,8 @@ class Event extends Model
 
     protected $dates = ['start', 'end'];
 
-
     public function employee()
     {
         return $this->hasOne(Employee::class,'id', 'employee_id');
     }
-
 }

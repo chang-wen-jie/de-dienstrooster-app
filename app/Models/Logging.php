@@ -10,13 +10,13 @@ class Logging extends Model
     use HasFactory;
 
     protected $fillable = [
-        'uid',
-        'name',
-        'aa_old_status',
-        'aa_new_status',
-        'duration_minutes',
-        'logged_at',
+        'employee_id',
+        'presence_state',
+        'activity_duration_minutes',
     ];
 
-    protected $dates = ['logged_at'];
+    public function employee()
+    {
+        return $this->hasOne(Employee::class,'id', 'employee_id');
+    }
 }

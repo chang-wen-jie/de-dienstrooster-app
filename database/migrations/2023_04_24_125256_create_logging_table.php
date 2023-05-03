@@ -13,17 +13,10 @@ return new class extends Migration
     {
         Schema::create('logging', function (Blueprint $table) {
             $table->id();
-            $table->string('uid');
             $table->foreignId('employee_id')->nullable()->constrained('employees');
-            $table->string('name');
-            $table->string('aa_old_status');
-            $table->string('aa_new_status');
-            $table->integer('duration_minutes');
-            $table->timestamp('logged_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->string('presence_state');
+            $table->integer('activity_duration_minutes');
             $table->timestamps();
-
-            $table->index(['aa_new_status', 'logged_at']);
-            $table->index(['logged_at', 'aa_new_status', 'uid']);
         });
     }
 

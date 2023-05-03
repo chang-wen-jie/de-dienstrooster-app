@@ -40,7 +40,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/admin/user/{id}/setEvent', [AdminController::class, 'setEvent'])->name('setEvent');
     Route::post('/admin/user/{id}/setSchedule', [AdminController::class, 'setSchedule'])->name('setSchedule');
 
-    Route::get('/api', [APIController::class, 'index'])->name('api');
     Route::get('/api/v1/users/{apiKey}/', [APIController::class, 'connectAPI'])->name('connectAPI');
 });
 

@@ -30,4 +30,9 @@ class Employee extends Authenticatable
     {
         return $this->hasMany(Schedule::class, 'employee_id', 'id');
     }
+
+    public function logging()
+    {
+        return $this->hasMany(Logging::class, 'employee_id', 'id');
+    }
 }
