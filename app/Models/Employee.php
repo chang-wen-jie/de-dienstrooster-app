@@ -10,6 +10,7 @@ class Employee extends Authenticatable
     use HasFactory;
 
     protected $fillable = [
+        'rfid_token',
         'name',
         'email',
         'email_verified_at',
@@ -17,6 +18,7 @@ class Employee extends Authenticatable
         'remember_token',
         'last_check_in',
         'last_check_out',
+        'role_id',
         'present',
         'active',
     ];

@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->string('rfid_token');
             $table->string('name');
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('remember_token')->nullable();
-            $table->timestamps();
             $table->foreignId('role_id')->nullable()->constrained('roles');
-            $table->timestamp('last_check_in');
-            $table->timestamp('last_check_out');
+            $table->timestamp('last_check_in')->nullable();
+            $table->timestamp('last_check_out')->nullable();
             $table->boolean('present')->nullable();
             $table->boolean('active')->nullable();
+            $table->timestamps();
         });
     }
 

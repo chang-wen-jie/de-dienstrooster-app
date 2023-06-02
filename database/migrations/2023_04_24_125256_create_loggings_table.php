@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedules', function (Blueprint $table) {
+        Schema::create('loggings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->nullable()->constrained('employees');
-            $table->enum('weekday', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']);
-            $table->integer('week');
-            $table->time('shift_start_time')->nullable();
-            $table->time('shift_end_time')->nullable();
+            $table->string('presence_state');
+            $table->integer('session_duration_minutes');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedules');
+        Schema::dropIfExists('logging');
     }
 };

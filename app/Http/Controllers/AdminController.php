@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -15,14 +14,37 @@ class AdminController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->role_id === 1)
-        {
-            $employees = Employee::all()->sortByDesc('active');
+        $employees = Employee::all()->sortByDesc('active');
 
-            return view('admin.admin', ['employees' => $employees]);
-        }
+        return view('admin.admin', ['employees' => $employees]);
+    }
 
-        return redirect()->back();
+    /**
+     * Personeel toevoegen
+     */
+    public function create()
+    {
+        return view('admin.create');
+    }
+
+    public function store(Request $request)
+    {
+        $rfid = $request->input('rfid');
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        $employee_data = [
+            'rfid_token' => $rfid,
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make($password),
+            'role_id' => 2,
+            'active' => 1,
+        ];
+        Employee::create($employee_data);
+
+        return redirect('/admin')->with('success', 'Het personeel is succesvol toegevoegd.');
     }
 
     /**
@@ -31,6 +53,7 @@ class AdminController extends Controller
     public function edit(int $id)
     {
         $employee = Employee::findOrFail($id);
+
 
         return view('admin.edit', ['employee' => $employee]);
     }
@@ -42,9 +65,18 @@ class AdminController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
+        $rfid = $request->input('rfid');
         $name = $request->input('name');
-        $account_status = $request->input('active');
-        $employee->update(['name' => $name, 'active' => $account_status]);
+        $role = $request->input('role');
+        $active = $request->input('active');
+
+        $employee_data = [
+            'name' => $name,
+            'rfid_token' => $rfid,
+            'role_id' => $role === 'admin' ? 1 : 2,
+            'active' => $active,
+        ];
+        $employee->update($employee_data);
 
         return redirect('/admin')->with('success', 'De personeelsgegevens zijn succesvol aangepast.');
     }
@@ -114,6 +146,18 @@ class AdminController extends Controller
     }
 
     /**
+     * Basisrooster ophalen.
+     */
+    public function editDynamicWeekField(int $id, int $week)
+    {
+        $employee = Employee::findOrFail($id);
+
+        $week_html = view('admin.edit-dynamic-week-field', ['employee' => $employee, 'week' => $week])->render();
+
+        return ['week_html' => $week_html];
+    }
+
+    /**
      * Basisrooster opstellen.
      */
     public function setSchedule(Request $request, $id)
@@ -121,7 +165,7 @@ class AdminController extends Controller
         $employee = Employee::findOrFail($id);
 
         $weekdays = $request->input('weekdays');
-        $week_type = $request->input('week-type');
+        $week = $request->input('week');
 
         $schedule_next_year = request()->has('schedule-next-year');
 
@@ -129,7 +173,7 @@ class AdminController extends Controller
             return redirect()->back()->withErrors(['error' => 'Er is nog geen basisrooster opgesteld voor dit personeel!']);
         } else {
             foreach ($weekdays as $weekday) {
-                $employee_scheduled_shift = $employee->schedule()->where(['weekday' => $weekday, 'week_type' => $week_type])->first();
+                $employee_scheduled_shift = $employee->schedule()->where(['weekday' => $weekday, 'week' => $week])->first();
 
                 $shift_start_time = $request->input('shift-start-time-' . $weekday);
                 $shift_end_time = $request->input('shift-end-time-' . $weekday);
@@ -139,41 +183,42 @@ class AdminController extends Controller
                     $schedule_start = $request->input('schedule-start-date');
                     $schedule_end = $request->input('schedule-end-date');
 
+                    $scheduled_day = Carbon::parse($weekday);
                     $scheduling_start = Carbon::parse($schedule_start);
                     $scheduling_end = Carbon::parse($schedule_end);
-                    $scheduled_day = Carbon::parse($weekday);
 
-                    $weeks_between = $week_type === 'odd' ? 1 : 2;
                     $weeks_remaining = $scheduling_end->diffInWeeks($scheduling_start);
 
-                    for ($i = $weeks_between; $i <= $weeks_remaining; $i += 2) {
+                    for ($i = $week - 1; $i <= $weeks_remaining; $i += 5) {
                         $scheduled_shift_date = $schedule_next_year
                             ? $scheduling_start->copy()->addYear()->addWeeks($i)->next($scheduled_day->format('l'))
                             : $scheduling_start->copy()->addWeeks($i)->addDays($scheduled_day->dayOfWeek - $scheduling_start->dayOfWeek)->startOfDay();
 
-                        $scheduled_shift_start = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_start_time)->toDateTime();
-                        $scheduled_shift_end = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_end_time)->toDateTime();
+                        if ($scheduled_shift_date->greaterThan($scheduling_start)) {
+                            $scheduled_shift_start = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_start_time)->toDateTime();
+                            $scheduled_shift_end = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_end_time)->toDateTime();
 
-                        $event_data = [
-                            'employee_id' => $employee->id,
-                            'status_id' => 1,
-                            'start' => $scheduled_shift_start,
-                            'end' => $scheduled_shift_end,
-                            'sick' => false,
-                        ];
+                            $event_data = [
+                                'employee_id' => $employee->id,
+                                'status_id' => 1,
+                                'start' => $scheduled_shift_start,
+                                'end' => $scheduled_shift_end,
+                                'sick' => false,
+                            ];
 
-                        $employee_existing_shift = $employee->event()->whereDate('start', $scheduled_shift_start)->first();
+                            $employee_existing_shift = $employee->event()->whereDate('start', $scheduled_shift_start)->first();
 
-                        if ($employee_existing_shift) {
-                            $employee_existing_shift->update($event_data);
-                        } else {
-                            $employee->event()->create($event_data);
+                            if ($employee_existing_shift) {
+                                $employee_existing_shift->update($event_data);
+                            } else {
+                                $employee->event()->create($event_data);
+                            }
                         }
                     }
                     $scheduled_shift_data = [
                         'employee_id' => $employee->id,
                         'weekday' => $weekday,
-                        'week_type' => $week_type,
+                        'week' => $week,
                         'shift_start_time' => $shift_start_time,
                         'shift_end_time' => $shift_end_time,
                     ];

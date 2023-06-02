@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('employee_id')->nullable()->constrained('employees');
             $table->foreignId('status_id')->nullable()->constrained('statuses');
-            $table->dateTime('start');
-            $table->dateTime('end');
+            $table->dateTime('start')->nullable();
+            $table->dateTime('end')->nullable();
             $table->boolean('sick')->nullable();
             $table->timestamps();
         });

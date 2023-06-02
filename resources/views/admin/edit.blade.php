@@ -40,9 +40,23 @@
                             </div>
 
                             <div>
+                                <x-input-label for="rfid" :value="__('RFID')" />
+                                <x-text-input id="rfid" name="rfid" type="text" class="mt-1 block w-full" :value="old('rfid', $employee->rfid_token)" required autofocus autocomplete="rfid" />
+                                <x-input-error class="mt-2" :messages="$errors->get('rfid')" />
+                            </div>
+
+                            <div>
                                 <x-input-label for="name" :value="__('Naam')" />
                                 <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $employee->name)" required autofocus autocomplete="name" />
                                 <x-input-error class="mt-2" :messages="$errors->get('name')" />
+                            </div>
+
+                            <div>
+                                <x-input-label for="role" :value="__('Rol')" />
+                                <select id="role" name="role">
+                                    <option value="admin" {{ $employee->role_id === 1 ? 'selected' : '' }}>Beheerder</option>
+                                    <option value="user" {{ $employee->role_id === 2 ? 'selected' : '' }}>Medewerker</option>
+                                </select>
                             </div>
 
                             <div class="block mt-4">
@@ -113,7 +127,7 @@
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __("Geef aan tot welk datum de afwezigheid zal plaatsvinden gepaard met de afwezigheidsreden op. Geregistreerde afwezigheden zijn zichtbaar binnen de kalender.") }}
+                                {{ __("Geef aan tijdens welke datumbereik de afwezigheid zal plaatsvinden gepaard met de afwezigheidsreden. Geregistreerde afwezigheden zijn zichtbaar binnen de kalender.") }}
                             </p>
                         </header>
 
@@ -156,94 +170,30 @@
                             </h2>
 
                             <p class="mt-1 text-sm text-gray-600">
-                                {{ __("Stel hier een basisrooster voor dit personeel op. Geef aan op welke dag(en) het personeel ingeroosterd zal zijn tijdens de even en oneven weken.") }}
+                                {{ __("Stel hier een basisrooster voor dit personeel op. Het basisrooster herhaalt zich om de vijf weken en de eerste instantie van de rotatie zal ingaan vanaf de seselecteerde startdatum.") }}
                             </p>
                         </header>
 
                         <form method="post" action="{{ route('setSchedule', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
-                            {{ __('Oneven weken') }}
-                            <input type="hidden" name="week-type" value="odd">
-                            @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as $weekday)
-                                @php $employee_scheduled_shift = $employee->schedule()->where('weekday', $weekday)->where('week_type', 'odd')->first(); @endphp
-                                <div>
-                                    <input type="hidden" name="weekdays[]" value="{{ $weekday }}">
-                                    <x-input-label for="shift-start-time-{{ $weekday }}" :value="__(ucfirst($weekday))" />
-                                    <div class="flex gap-4">
-                                        <div>
-                                            <x-input-label for="shift-start-time-{{ $weekday }}" :value="__('Starttijd')" />
-                                            <input type="time" id="shift-start-time-{{ $weekday }}" name="shift-start-time-{{ $weekday }}" value="{{ $employee_scheduled_shift ? date('H:i', strtotime($employee_scheduled_shift->shift_start_time)) : '' }}">
-                                            <x-input-error class="mt-2" :messages="$errors->get('shift-start-time-' . $weekday)" />
-                                        </div>
-
-                                        <div>
-                                            <x-input-label for="shift-end-time-{{ $weekday }}" :value="__('Eindtijd')" />
-                                            <input type="time" id="shift-end-time-{{ $weekday }}" name="shift-end-time-{{ $weekday }}" value="{{ $employee_scheduled_shift ? date('H:i', strtotime($employee_scheduled_shift->shift_end_time)) : '' }}">
-                                            <x-input-error class="mt-2" :messages="$errors->get('shift-end-time-' . $weekday)" />
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
                             <div>
-                                <div>
-                                    <x-input-label for="schedule-start-date" :value="__('Startdatum')" />
-                                    <input type="date" id="schedule-start-date" name="schedule-start-date" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('last day of december this year')) }}">
-                                    <x-input-error class="mt-2" :messages="$errors->get('schedule-start-date')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="schedule-end-date" :value="__('Einddatum')" />
-                                    <input type="date" id="schedule-end-date" name="schedule-end-date" value="{{ date('Y-m-d', strtotime('last day of december this year')) }}" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('last day of december this year')) }}">
-                                    <x-input-error class="mt-2" :messages="$errors->get('schedule-end-date')" />
-                                </div>
+                                <x-input-label for="week" :value="__('Weeknummer')" />
+                                @php
+                                    $selectedWeek = request()->input('week');
+                                @endphp
+                                <select id="week" name="week" onchange="getDynamicWeekField({{ $employee->id }}, this)">
+                                    <option value="" selected>
+                                        Kies een week
+                                    </option>
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <option value="{{ $i }}">
+                                            {{ $i }}
+                                        </option>
+                                    @endfor
+                                </select>
                             </div>
 
-                            <div class="flex items-center gap-4">
-                                <x-primary-button>{{ __('Opstellen') }}</x-primary-button>
-                            </div>
-
-                            <div class="flex items-center gap-4">
-                                <x-primary-button name="schedule-next-year">{{ __('Inroosteren voor volgend jaar') }}</x-primary-button>
-                            </div>
-                        </form>
-
-                        <form method="post" action="{{ route('setSchedule', $employee->id) }}" class="mt-6 space-y-6">
-                            @csrf
-                            {{ __('Even weken') }}
-                            <input type="hidden" name="week-type" value="even">
-                            @foreach(['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as $weekday)
-                                @php $employee_scheduled_shift = $employee->schedule()->where('weekday', $weekday)->where('week_type', 'even')->first(); @endphp
-                                <div>
-                                    <input type="hidden" name="weekdays[]" value="{{ $weekday }}">
-                                    <x-input-label for="shift-start-time-{{ $weekday }}" :value="__(ucfirst($weekday))" />
-                                    <div class="flex gap-4">
-                                        <div>
-                                            <x-input-label for="shift-start-time-{{ $weekday }}" :value="__('Starttijd')" />
-                                            <input type="time" id="shift-start-time-{{ $weekday }}" name="shift-start-time-{{ $weekday }}" value="{{ $employee_scheduled_shift ? date('H:i', strtotime($employee_scheduled_shift->shift_start_time)) : '' }}">
-                                            <x-input-error class="mt-2" :messages="$errors->get('shift-start-time-' . $weekday)" />
-                                        </div>
-
-                                        <div>
-                                            <x-input-label for="shift-end-time-{{ $weekday }}" :value="__('Eindtijd')" />
-                                            <input type="time" id="shift-end-time-{{ $weekday }}" name="shift-end-time-{{ $weekday }}" value="{{ $employee_scheduled_shift ? date('H:i', strtotime($employee_scheduled_shift->shift_end_time)) : '' }}">
-                                            <x-input-error class="mt-2" :messages="$errors->get('shift-end-time-' . $weekday)" />
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            <div>
-                                <div>
-                                    <x-input-label for="schedule-start-date" :value="__('Startdatum')" />
-                                    <input type="date" id="schedule-start-date" name="schedule-start-date" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('last day of december this year')) }}">
-                                    <x-input-error class="mt-2" :messages="$errors->get('schedule-start-date')" />
-                                </div>
-
-                                <div>
-                                    <x-input-label for="schedule-end-date" :value="__('Einddatum')" />
-                                    <input type="date" id="schedule-end-date" name="schedule-end-date" value="{{ date('Y-m-d', strtotime('last day of december this year')) }}" min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('last day of december this year')) }}">
-                                    <x-input-error class="mt-2" :messages="$errors->get('schedule-end-date')" />
-                                </div>
-                            </div>
+                            <div id="week_inputs" data-changed="0"></div>
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>{{ __('Opstellen') }}</x-primary-button>

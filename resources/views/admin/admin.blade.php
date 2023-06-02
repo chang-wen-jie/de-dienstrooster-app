@@ -49,7 +49,7 @@
                                             $date1 = Carbon\Carbon::parse($employee->last_check_in);
                                             $date2 = Carbon\Carbon::parse($employee->last_check_out);
 
-                                            if ($date1->greaterThan($date2)) {
+                                            if ($date1->greaterThan($date2) || $date1->equalTo($date2)) {
                                                 $checked_in = true;
                                             }
                                         @endphp
@@ -64,6 +64,12 @@
                                 </tr>
                             @endforeach
                             </tbody>
+
+                            <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
+                                <a href="{{ route('admin.create')}}" class="btn btn-primary btn-sm">
+                                    Personeel Toevoegen
+                                </a>
+                            </td>
                         </table>
                     </div>
                 </div>

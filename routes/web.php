@@ -22,25 +22,31 @@ Route::get('/', function () {
     return redirect('dashboard');
 });
 
+Route::get('/api/v1/users/{rfidToken}/apiTogglePresence/{apiKey}', [APIController::class, 'apiTogglePresence'])->name('apiTogglePresence');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/kiosk', [DashboardController::class, 'displayKioskMode'])->name('kiosk');
     Route::get('/dashboard/user/{id}/togglePresence', [DashboardController::class, 'togglePresence'])->name('togglePresence');
     Route::get('/dashboard/user/{id}/reportRecovery', [DashboardController::class, 'reportRecovery'])->name('reportRecovery');
 
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
     Route::get('/calendar/fetchEvents', [CalendarController::class, 'fetchEvents']);
 
-    Route::resource('admin', AdminController::class);
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-    Route::put('/admin/user/{id}/update', [AdminController::class, 'update'])->name('update');
-    Route::post('/admin/user/{id}/setEvent', [AdminController::class, 'setEvent'])->name('setEvent');
-    Route::post('/admin/user/{id}/setSchedule', [AdminController::class, 'setSchedule'])->name('setSchedule');
-
-    Route::get('/api/v1/users/{apiKey}/', [APIController::class, 'connectAPI'])->name('connectAPI');
+    Route::middleware('role')->group(function () {
+        Route::resource('admin', AdminController::class);
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+        Route::get('/admin/user/{id}/logs', [DashboardController::class, 'showLogs'])->name('showLogs');
+        Route::post('/admin/store', [AdminController::class, 'store'])->name('store');
+        Route::put('/admin/user/{id}/update', [AdminController::class, 'update'])->name('update');
+        Route::post('/admin/user/{id}/setEvent', [AdminController::class, 'setEvent'])->name('setEvent');
+        Route::get('/admin/user/{id}/editDynamicWeekField/{week}', [AdminController::class, 'editDynamicWeekField'])->name('editDynamicWeekField');
+        Route::post('/admin/user/{id}/setSchedule', [AdminController::class, 'setSchedule'])->name('setSchedule');
+    });
 });
 
 require __DIR__.'/auth.php';
