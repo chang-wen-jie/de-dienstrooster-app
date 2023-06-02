@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Employee::create([
-            'rfid_token' => '23404992',
+            'rfid' => '23404992',
             'name' => 'Gast 5',
             'email' => 'admin@example.com',
             'password' => Hash::make('admin'),
@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Employee::create([
-            'rfid_token' => '692A6F19',
+            'rfid' => '692A6F19',
             'name' => 'Gast 1',
             'email' => 'gast1@example.com',
             'password' => Hash::make('admin'),
@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Employee::create([
-            'rfid_token' => '897A5E19',
+            'rfid' => '897A5E19',
             'name' => 'Gast 2',
             'email' => 'gast2@example.com',
             'password' => Hash::make('admin'),
@@ -69,7 +69,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Employee::create([
-            'rfid_token' => 'E0C65DFD',
+            'rfid' => 'E0C65DFD',
             'name' => 'Gast 3',
             'email' => 'gast3@example.com',
             'password' => Hash::make('admin'),
@@ -81,7 +81,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Employee::create([
-            'rfid_token' => 'A36B5CAC',
+            'rfid' => 'A36B5CAC',
             'name' => 'Gast 4',
             'email' => 'gast4@example.com',
             'password' => Hash::make('admin'),

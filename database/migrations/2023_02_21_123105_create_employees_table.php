@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('rfid_token');
+            $table->string('rfid');
             $table->string('name');
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();

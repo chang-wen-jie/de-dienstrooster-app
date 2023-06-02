@@ -11,31 +11,31 @@ class CalendarController extends Controller
         return view('calendar');
     }
 
+    /**
+     * Haalt alle evenementen op met het geselecteerde datumebreik.
+     */
     public function fetchEvents(Request $request)
     {
-        /**
-         * Haalt de huidige start- en einddatum van de geselecteerde datumbereik op.
-         */
-        $start = $request->get('start');
-        $end = $request->get('end');
+        $event_start = $request->get('start');
+        $event_end = $request->get('end');
 
-        $events = Event::whereBetween('start', [$start, $end])->get();
+        $filtered_events = Event::whereBetween('start', [$event_start, $event_end])->get();
 
-        $event_list = [];
-        foreach ($events as $event) {
-            $employee_id = $event->employee_id;
+        $events = [];
+        foreach ($filtered_events as $filtered_event) {
+            $employee_id = $filtered_event->employee_id;
             $employee = Employee::findOrFail($employee_id);
 
-            $event_list[] = [
+            $events[] = [
                 'name' => $employee->name,
-                'id' => $event->id,
-                'status' => $event->status_id,
-                'start' => $event->start,
-                'end' => $event->end,
-                'sick' => $event->sick,
+                'id' => $filtered_event->id,
+                'status' => $filtered_event->status_id,
+                'start' => $filtered_event->start,
+                'end' => $filtered_event->end,
+                'sick' => $filtered_event->sick,
             ];
         }
 
-        return response()->json($event_list);
+        return response()->json($events);
     }
 }

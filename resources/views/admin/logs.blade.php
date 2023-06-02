@@ -21,22 +21,22 @@
                         </header>
 
                         @foreach($employee->logging()->orderBy('updated_at', 'desc')->get() as $log)
-                            @if($log->presence_state === 'IN')
+                            @if($log->presence_state === 'CHECKED IN')
                                 <div class="mt-6 space-y-6">
                                     <b>Ingecheckt</b> om <b>{{ $log->updated_at }}</b>
-                                    @if ($log->session_duration_minutes > 60)
-                                        (Afwezig voor {{ intdiv($log->session_duration_minutes, 60) }} uur en {{ $log->session_duration_minutes % 60 }} minuten)
+                                    @if ($log->session_time > 60)
+                                        (Afwezig voor {{ intdiv($log->session_time, 60) }} uur en {{ $log->session_time % 60 }} minuten)
                                     @else
-                                        (Afwezig voor {{ $log->session_duration_minutes }} minuten)
+                                        (Afwezig voor {{ $log->session_time }} minuten)
                                     @endif
                                 </div>
                             @else
                                 <div class="mt-6 space-y-6">
                                     <b>Uitgecheckt</b> om <b>{{ $log->updated_at }}</b>
-                                    @if ($log->session_duration_minutes > 60)
-                                        (Aanwezig voor {{ intdiv($log->session_duration_minutes, 60) }} uur en {{ $log->session_duration_minutes % 60 }} minuten)
+                                    @if ($log->session_time > 60)
+                                        (Aanwezig voor {{ intdiv($log->session_time, 60) }} uur en {{ $log->session_time % 60 }} minuten)
                                     @else
-                                        (Aanwezig voor {{ $log->session_duration_minutes }} minuten)
+                                        (Aanwezig voor {{ $log->session_time }} minuten)
                                     @endif
                                 </div>
                             @endif

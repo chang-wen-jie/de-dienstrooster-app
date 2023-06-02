@@ -41,7 +41,7 @@
 
                             <div>
                                 <x-input-label for="rfid" :value="__('RFID')" />
-                                <x-text-input id="rfid" name="rfid" type="text" class="mt-1 block w-full" :value="old('rfid', $employee->rfid_token)" required autofocus autocomplete="rfid" />
+                                <x-text-input id="rfid" name="rfid" type="text" class="mt-1 block w-full" :value="old('rfid', $employee->rfid)" required autofocus autocomplete="rfid" />
                                 <x-input-error class="mt-2" :messages="$errors->get('rfid')" />
                             </div>
 

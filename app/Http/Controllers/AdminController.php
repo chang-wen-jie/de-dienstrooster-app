@@ -29,16 +29,16 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        $rfid = $request->input('rfid');
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $password = $request->input('password');
+        $employee_rfid = $request->input('rfid');
+        $employee_name = $request->input('name');
+        $employee_email = $request->input('email');
+        $employee_password = $request->input('password');
 
         $employee_data = [
-            'rfid_token' => $rfid,
-            'name' => $name,
-            'email' => $email,
-            'password' => Hash::make($password),
+            'rfid' => $employee_rfid,
+            'name' => $employee_name,
+            'email' => $employee_email,
+            'password' => Hash::make($employee_password),
             'role_id' => 2,
             'active' => 1,
         ];
@@ -54,7 +54,6 @@ class AdminController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
-
         return view('admin.edit', ['employee' => $employee]);
     }
 
@@ -65,16 +64,16 @@ class AdminController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
-        $rfid = $request->input('rfid');
-        $name = $request->input('name');
-        $role = $request->input('role');
-        $active = $request->input('active');
+        $employee_rfid = $request->input('rfid');
+        $employee_name = $request->input('name');
+        $employee_role = $request->input('role');
+        $employee_status = $request->input('active');
 
         $employee_data = [
-            'name' => $name,
-            'rfid_token' => $rfid,
-            'role_id' => $role === 'admin' ? 1 : 2,
-            'active' => $active,
+            'rfid' => $employee_rfid,
+            'name' => $employee_name,
+            'role_id' => $employee_role === 'admin' ? 1 : 2,
+            'active' => $employee_status,
         ];
         $employee->update($employee_data);
 
@@ -91,6 +90,7 @@ class AdminController extends Controller
         $shift_date = $request->input('shift-date');
         $shift_time_start = $request->input('shift-time-start');
         $shift_time_end = $request->input('shift-time-end');
+
         $shift_start = Carbon::parse($shift_date.' '.$shift_time_start)->format('Y-m-d H:i:s');
         $shift_end = Carbon::parse($shift_date.' '.$shift_time_end)->format('Y-m-d H:i:s');
 
@@ -194,7 +194,7 @@ class AdminController extends Controller
                             ? $scheduling_start->copy()->addYear()->addWeeks($i)->next($scheduled_day->format('l'))
                             : $scheduling_start->copy()->addWeeks($i)->addDays($scheduled_day->dayOfWeek - $scheduling_start->dayOfWeek)->startOfDay();
 
-                        if ($scheduled_shift_date->greaterThan($scheduling_start)) {
+                        if ($scheduled_shift_date->greaterThanOrEqualTo($scheduling_start)) {
                             $scheduled_shift_start = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_start_time)->toDateTime();
                             $scheduled_shift_end = $scheduled_shift_date->copy()->setTimeFromTimeString($shift_end_time)->toDateTime();
 

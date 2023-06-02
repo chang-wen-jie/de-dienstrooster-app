@@ -7,41 +7,38 @@ use App\Models\Employee;
 class APIController extends Controller
 {
     /**
-     * Microcontroller API connectie.
+     * Checkt personeel in en uit m.b.v. een API-oproep.
      */
-    public function apiTogglePresence(string $rfid_token, string $api_key) {
-        if ($api_key !== '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
-            return 'Toegang geweigerd. Opgegeven API-sleutelnummer: ' . $api_key;
+    public function apiTogglePresence(string $rfid, string $api_key) {
+        if ($api_key === '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+            $employee = Employee::where('rfid', $rfid)->firstOrFail();
+
+            if ($employee) {
+                $present = !$employee->present;
+                $employee_action = $present ? 'CHECKED OUT' : 'CHECKED IN';
+
+                $employee_last_activity = strtotime($employee->updated_at);
+                $employee_session_duration = intval((strtotime(now()) - $employee_last_activity) / 60);
+
+                $new_log_data = [
+                    'employee_id' => $employee->id,
+                    'presence_state' => $employee_action,
+                    'session_time' => $employee_session_duration,
+                ];
+                $employee->logging()->create($new_log_data);
+
+                $updated_employee_data = [
+                    'last_check_in' => $present ? now() : $employee->last_check_in,
+                    'last_check_out' => !$present ? now() : $employee->last_check_out,
+                    'present' => $present,
+                ];
+                $employee->update($updated_employee_data);
+
+                return redirect()->back();
+            } else {
+                return 'Er is geen personeel gelinkt aan het RFID ' . $rfid;
+            }
         }
-
-        $employee = Employee::where('rfid_token', $rfid_token)->firstOrFail();
-
-        if ($employee) {
-            $present = !$employee->present;
-            $presence_state = $employee->present ? 'OUT' : 'IN';
-
-            $previous_activity_time = strtotime($employee->updated_at);
-            $current_activity_time = strtotime('now');
-            $session_duration_minutes = intval(($current_activity_time - $previous_activity_time) / 60);
-
-            $logging_data = [
-                'employee_id' => $employee->id,
-                'presence_state' => $presence_state,
-                'session_duration_minutes' => $session_duration_minutes,
-            ];
-            $employee->logging()->create($logging_data);
-
-            $employee_data = [
-                'last_check_in' => $present ? now() : $employee->last_check_in,
-                'last_check_out' => !$present ? now() : $employee->last_check_out,
-                'present' => $present,
-            ];
-            $employee->update($employee_data);
-
-            return '[aa_status]=' . $presence_state . PHP_EOL . '[rfidtoken]=' .$rfid_token . PHP_EOL . '[name]     =' . $employee->name;
-        } else {
-            return 'Er is geen personeel dat verbonden is met het RFID ' . $rfid_token;
-        }
-
+        return 'Het opgegeven API-sleutelnummer is ongeldig';
     }
 }

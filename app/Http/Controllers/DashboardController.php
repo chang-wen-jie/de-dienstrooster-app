@@ -26,16 +26,16 @@ class DashboardController extends Controller
         $employee = Employee::findOrFail($id);
 
         $present = !$employee->present;
-        $presence_state = $employee->present ? 'OUT' : 'IN';
+        $presence_state = $employee->present ? 'CHECKED OUT' : 'CHECKED IN';
 
         $previous_activity_time = strtotime($employee->updated_at);
         $current_activity_time = strtotime('now');
-        $session_duration_minutes = intval(($current_activity_time - $previous_activity_time) / 60);
+        $session_time = intval(($current_activity_time - $previous_activity_time) / 60);
 
         $logging_data = [
             'employee_id' => $employee->id,
             'presence_state' => $presence_state,
-            'session_duration_minutes' => $session_duration_minutes,
+            'session_time' => $session_time,
         ];
         $employee->logging()->create($logging_data);
 
