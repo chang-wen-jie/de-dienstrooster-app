@@ -1,12 +1,11 @@
-## Dienstrooster App
+## De Dienstrooster App
 
 Met dit systeem kun je gemakkelijk de diensten en aanwezig- en afwezigheden van het personeel registreren, aanpassen, en/of (periodiek) inplannen.
-
 Verder vallen alle gebeurtenissen gemakkelijk in één oogopslag te zien binnen het ingebouwde kalenderoverzicht.
 
 ## Stapsgewijze Gebruiksaanwijzing
 
-- 1: Clone dit project binnen het gewenste folder
+- 1: Clone dit project binnen het gewenste folder (`git clone https://github.com/chang-wen-jie/dienstrooster-app.git`)
 - 2: Installeer alle externe pakketten (`npm i` & `composer i`)
 - 3: Hernoem het `.env.example` bestand naar `.env` en pas het toe naar de desbetreffende databasegegevens
 - 4: Start de databaseserver op
