@@ -17,16 +17,16 @@
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Bedrijfsrol</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Naam</span>
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Personeelsnaam</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Status</span>
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Accountstatus</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Meest recente activiteit</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Beheer</span>
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Beheren</span>
                                 </th>
                             </tr>
                             </thead>
@@ -35,26 +35,25 @@
                             @foreach($employees as $employee)
                                 <tr class="bg-white">
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        {{ $employee->role_id === 1 ? 'Beheerder' : 'Medewerker' }}
+                                        {{ $employee->account_type === 'admin' ? 'Beheerder' : 'Medewerker' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         {{ $employee->name }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                                        {{ $employee->active ? 'Actief' : 'Inactief' }}
+                                        {{ $employee->account_status === 'active' ? 'Actief' : 'Inactief' }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         @php
-                                            $checked_in = false;
-                                            $date1 = Carbon\Carbon::parse($employee->last_check_in);
-                                            $date2 = Carbon\Carbon::parse($employee->last_check_out);
+                                            $employee_is_present = false;
+                                            $check_in_time = Carbon\Carbon::parse($employee->last_check_in);
+                                            $check_out_time = Carbon\Carbon::parse($employee->last_check_out);
 
-                                            if ($date1->greaterThan($date2) || $date1->equalTo($date2)) {
-                                                $checked_in = true;
+                                            if ($check_in_time->greaterThan($check_out_time)) {
+                                                $employee_is_present = true;
                                             }
                                         @endphp
-
-                                        {{ $checked_in ? $date1 : $date2 }} <b>({{ $checked_in ? 'Ingecheckt' : 'Uitgecheckt' }})</b>
+                                        {{ $employee_is_present ? $check_in_time : $check_out_time }} <b>({{ $employee_is_present ? 'Ingecheckt' : 'Uitgecheckt' }})</b>
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         <a href="{{ route('admin.edit', $employee->id)}}" class="btn btn-primary btn-sm">
@@ -63,6 +62,7 @@
                                     </td>
                                 </tr>
                             @endforeach
+                            {{ $employees->links() }}
                             </tbody>
 
                             <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">

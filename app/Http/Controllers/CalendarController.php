@@ -29,10 +29,10 @@ class CalendarController extends Controller
             $events[] = [
                 'name' => $employee->name,
                 'id' => $filtered_event->id,
-                'status' => $filtered_event->status_id,
+                'type' => $filtered_event->event_type,
                 'start' => $filtered_event->start,
                 'end' => $filtered_event->end,
-                'sick' => $filtered_event->sick,
+                'sick' => $filtered_event->called_in_sick,
             ];
         }
 

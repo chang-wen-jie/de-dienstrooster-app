@@ -20,7 +20,7 @@
                             </p>
                         </header>
 
-                        @foreach($employee->logging()->orderBy('updated_at', 'desc')->get() as $log)
+                        @foreach($employee->log()->orderBy('updated_at', 'desc')->get() as $log)
                             @if($log->presence_state === 'CHECKED IN')
                                 <div class="mt-6 space-y-6">
                                     <b>Ingecheckt</b> om <b>{{ $log->updated_at }}</b>

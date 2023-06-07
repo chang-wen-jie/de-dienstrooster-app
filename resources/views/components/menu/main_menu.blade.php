@@ -7,7 +7,7 @@
         {{ __('Kalender') }}
     </x-nav-link>
 
-    @if (auth()->user()->role_id === 1)
+    @if (auth()->user()->account_type === 'admin')
         <x-nav-link :href="route('admin')" :active="request()->routeIs('admin')">
             {{ __('Administratief') }}
         </x-nav-link>

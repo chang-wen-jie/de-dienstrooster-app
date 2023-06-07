@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Role;
+use App\Models\Event;
 use App\Models\Employee;
-use App\Models\Status;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -16,82 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        Role::create([
-            'role' => 'admin',
-        ]);
-
-        Role::create([
-            'role' => 'user',
-        ]);
-
-        Status::create([
-            'status' => 'on_duty',
-        ]);
-
-        Status::create([
-            'status' => 'on_leave',
-        ]);
-
         Employee::create([
-            'rfid' => '23404992',
-            'name' => 'Gast 5',
+            'name' => 'Administratie',
             'email' => 'admin@example.com',
             'password' => Hash::make('admin'),
-            'role_id' => 1,
+            'rfid' => 'ABCDEFG12345678',
+            'account_type' => 'admin',
+            'account_status' => 'active',
             'last_check_in' => now(),
             'last_check_out'=> now(),
-            'present' => false,
-            'active' => true,
         ]);
 
-        Employee::create([
-            'rfid' => '692A6F19',
-            'name' => 'Gast 1',
-            'email' => 'gast1@example.com',
-            'password' => Hash::make('admin'),
-            'role_id' => 1,
-            'last_check_in' => now(),
-            'last_check_out'=> now(),
-            'present' => false,
-            'active' => true,
-        ]);
-
-        Employee::create([
-            'rfid' => '897A5E19',
-            'name' => 'Gast 2',
-            'email' => 'gast2@example.com',
-            'password' => Hash::make('admin'),
-            'role_id' => 1,
-            'last_check_in' => now(),
-            'last_check_out'=> now(),
-            'present' => false,
-            'active' => true,
-        ]);
-
-        Employee::create([
-            'rfid' => 'E0C65DFD',
-            'name' => 'Gast 3',
-            'email' => 'gast3@example.com',
-            'password' => Hash::make('admin'),
-            'role_id' => 1,
-            'last_check_in' => now(),
-            'last_check_out'=> now(),
-            'present' => false,
-            'active' => true,
-        ]);
-
-        Employee::create([
-            'rfid' => 'A36B5CAC',
-            'name' => 'Gast 4',
-            'email' => 'gast4@example.com',
-            'password' => Hash::make('admin'),
-            'role_id' => 2,
-            'last_check_in' => now(),
-            'last_check_out'=> now(),
-            'present' => false,
-            'active' => true,
-        ]);
-
-//        Employee::factory(15)->create();
+        Employee::factory(30)->create();
+        Event::factory(100)->create();
     }
 }

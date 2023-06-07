@@ -17,7 +17,7 @@ class EnsureUserHasRole
     public function handle(Request $request, Closure $next): Response
     {
         // Checkt voor nu alleen voor één rol, later in een for-loop stoppen?
-        if (Auth::user()->role_id !== 1) {
+        if (Auth::user()->account_type !== 'admin') {
             return redirect('dashboard');
         }
 

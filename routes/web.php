@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\KioskController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +24,7 @@ Route::get('/', function () {
     return redirect('dashboard');
 });
 
-Route::get('/api/v1/users/{rfidToken}/apiTogglePresence/{apiKey}', [APIController::class, 'apiTogglePresence'])->name('apiTogglePresence');
+Route::get('/api/v1/users/{rfid}/togglePresence/{api_key}', [APIController::class, 'togglePresence'])->name('togglePresence');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -30,9 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/kiosk', [DashboardController::class, 'displayKioskMode'])->name('kiosk');
-    Route::get('/dashboard/user/{id}/togglePresence', [DashboardController::class, 'togglePresence'])->name('togglePresence');
     Route::get('/dashboard/user/{id}/reportRecovery', [DashboardController::class, 'reportRecovery'])->name('reportRecovery');
+
+    Route::get('/kiosk', [KioskController::class, 'index'])->name('kiosk');
 
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
     Route::get('/calendar/fetchEvents', [CalendarController::class, 'fetchEvents']);
@@ -41,11 +43,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('admin', AdminController::class);
         Route::get('/admin', [AdminController::class, 'index'])->name('admin');
         Route::get('/admin/user/{id}/logs', [DashboardController::class, 'showLogs'])->name('showLogs');
-        Route::post('/admin/store', [AdminController::class, 'store'])->name('store');
         Route::put('/admin/user/{id}/update', [AdminController::class, 'update'])->name('update');
-        Route::post('/admin/user/{id}/setEvent', [AdminController::class, 'setEvent'])->name('setEvent');
-        Route::get('/admin/user/{id}/editDynamicWeekField/{week}', [AdminController::class, 'editDynamicWeekField'])->name('editDynamicWeekField');
-        Route::post('/admin/user/{id}/setSchedule', [AdminController::class, 'setSchedule'])->name('setSchedule');
+        Route::post('/admin/store', [AdminController::class, 'store'])->name('store');
+
+        Route::post('/admin/user/{id}/setEvent', [EventController::class, 'setEvent'])->name('setEvent');
+        Route::get('/admin/user/{id}/getSchedule/{week}', [EventController::class, 'getSchedule'])->name('getSchedule');
+        Route::post('/admin/user/{id}/setSchedule', [EventController::class, 'setSchedule'])->name('setSchedule');
     });
 });
 

@@ -14,14 +14,14 @@
                         <div class="color-bubble-container">
                             <span class="color-bubble bg-success"></span> Ingeroosterd
                             <span class="color-bubble bg-warning"></span> Roostervrij
-                            <span class="color-bubble bg-danger"></span> Ziek (Ingeroosterd)
+                            <span class="color-bubble bg-danger"></span> Ingeroosterd maar Ziekgemeld
                         </div>
 
                         <div class="filter-container">
                             <select id="filter">
                                 <option value="">Alle</option>
-                                <option value="1">Ingeroosterd</option>
-                                <option value="2">Roostervrij</option>
+                                <option value="shift">Ingeroosterd</option>
+                                <option value="leave">Roostervrij</option>
                                 <option value="sick">Ziek</option>
                             </select>
                         </div>
@@ -36,7 +36,7 @@
                                         const shiftStart = moment(event.start);
                                         const shiftEnd = moment(event.end);
 
-                                        if (event.status === 1) {
+                                        if (event.type === 'shift') {
                                             if (shiftStart.isSame(shiftEnd, 'day') && shiftEnd.hour() <= 12) {
                                                 element.css({
                                                     'width': '50%',
@@ -75,14 +75,14 @@
                                                 for (let i = 0; i < eventsObj.length; i++) {
                                                     const event = eventsObj[i];
 
-                                                    if (!filter || event[filter] || event.status == filter) {
+                                                    if (!filter || event[filter] || event.type == filter) {
                                                         events.push({
                                                             title: event.name,
-                                                            status: event.status,
+                                                            type: event.type,
                                                             start: event.start,
                                                             end: event.end,
                                                             sick: event.sick,
-                                                            color: event.status === 1 ?
+                                                            color: event.type === 'shift' ?
                                                                 event.sick === 1 ?
                                                                     '#dc3545' :
                                                                     '#28a745' :

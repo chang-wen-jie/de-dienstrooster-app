@@ -5,17 +5,26 @@
 <article class="content">
     <header class="employee-counter">
         <span>
-            {{ __('Er zijn momenteel') }} <b><u>{{ count($employees->where('present', true)) }}</u></b> {{ __('personeel aanwezig') }}
+            {{ __('Er zijn momenteel') }} <b><u>{{ count($present_employees) }}</u></b> {{ __('personeel aanwezig') }}
         </span>
     </header>
     <div class="bubble-container">
-        @foreach($employees as $employee)
-            <div class="bubble {{ $employee->present ? 'present' : '' }}">
+        @foreach($active_employees as $employee)
+            @php
+                $employee_is_present = false;
+                $check_in_time = Carbon\Carbon::parse($employee->last_check_in);
+                $check_out_time = Carbon\Carbon::parse($employee->last_check_out);
+
+                if ($check_in_time->greaterThan($check_out_time)) {
+                    $employee_is_present = true;
+                }
+            @endphp
+            <div class="bubble {{ $employee_is_present ? 'present' : '' }}">
                 <h1>
                     {{ $employee->name }}
                 </h1>
                 <p>
-                    {{ $employee->present ? __('Ingecheckt op') : __('Uitgecheckt op') }} {{ $employee->updated_at }}
+                    {{ $employee_is_present ? __('Ingecheckt op') : __('Uitgecheckt op') }} {{ $employee->updated_at }}
                 </p>
             </div>
         @endforeach

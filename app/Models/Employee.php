@@ -10,17 +10,16 @@ class Employee extends Authenticatable
     use HasFactory;
 
     protected $fillable = [
-        'rfid',
         'name',
         'email',
         'email_verified_at',
         'password',
         'remember_token',
+        'rfid',
+        'account_type',
+        'account_status',
         'last_check_in',
         'last_check_out',
-        'role_id',
-        'present',
-        'active',
     ];
 
     public function event()
@@ -33,8 +32,8 @@ class Employee extends Authenticatable
         return $this->hasMany(Schedule::class, 'employee_id', 'id');
     }
 
-    public function logging()
+    public function log()
     {
-        return $this->hasMany(Logging::class, 'employee_id', 'id');
+        return $this->hasMany(Log::class, 'employee_id', 'id');
     }
 }

@@ -52,16 +52,16 @@
                             </div>
 
                             <div>
-                                <x-input-label for="role" :value="__('Rol')" />
-                                <select id="role" name="role">
-                                    <option value="admin" {{ $employee->role_id === 1 ? 'selected' : '' }}>Beheerder</option>
-                                    <option value="user" {{ $employee->role_id === 2 ? 'selected' : '' }}>Medewerker</option>
+                                <x-input-label for="account_type" :value="__('Rol')" />
+                                <select id="account_type" name="account_type">
+                                    <option value="admin" {{ $employee->account_type === 'admin' ? 'selected' : '' }}>Beheerder</option>
+                                    <option value="user" {{ $employee->account_type === 'user' ? 'selected' : '' }}>Medewerker</option>
                                 </select>
                             </div>
 
                             <div class="block mt-4">
-                                <label for="active" class="inline-flex items-center">
-                                    <input id="active" name="active" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="active" value="1" {{ $employee->active ? 'checked="checked' : '' }}"/>
+                                <label for="account_status" class="inline-flex items-center">
+                                    <input id="account_status" name="account_status" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="active" value="1" {{ $employee->active ? 'checked="checked' : '' }}"/>
                                     <span class="ml-2 text-sm text-gray-600">{{ __('Is dit personeel nog actief?') }}</span>
                                 </label>
                             </div>
@@ -178,10 +178,7 @@
                             @csrf
                             <div>
                                 <x-input-label for="week" :value="__('Weeknummer')" />
-                                @php
-                                    $selectedWeek = request()->input('week');
-                                @endphp
-                                <select id="week" name="week" onchange="getDynamicWeekField({{ $employee->id }}, this)">
+                                <select id="week" name="week" onchange="fetchSchedule({{ $employee->id }}, this)">
                                     <option value="" selected>
                                         Kies een week
                                     </option>
@@ -193,7 +190,7 @@
                                 </select>
                             </div>
 
-                            <div id="week_inputs" data-changed="0"></div>
+                            <div id="fetched_week" data-changed="0"></div>
 
                             <div class="flex items-center gap-4">
                                 <x-primary-button>{{ __('Opstellen') }}</x-primary-button>

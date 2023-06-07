@@ -13,17 +13,16 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('rfid');
             $table->string('name');
             $table->string('email');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('remember_token')->nullable();
-            $table->foreignId('role_id')->nullable()->constrained('roles');
+            $table->string('rfid');
+            $table->enum('account_type', ['admin', 'user']);
+            $table->enum('account_status', ['active', 'inactive']);
             $table->timestamp('last_check_in')->nullable();
             $table->timestamp('last_check_out')->nullable();
-            $table->boolean('present')->nullable();
-            $table->boolean('active')->nullable();
             $table->timestamps();
         });
     }

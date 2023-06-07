@@ -11,10 +11,10 @@ class Event extends Model
 
     protected $fillable = [
         'employee_id',
-        'status_id',
+        'event_type',
         'start',
         'end',
-        'sick'
+        'called_in_sick'
     ];
 
     protected $dates = ['start', 'end'];

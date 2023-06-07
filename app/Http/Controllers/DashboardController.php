@@ -7,48 +7,18 @@ use App\Models\Event;
 
 class DashboardController extends Controller
 {
-    public function index() {
-        $active_employees = Employee::where('active', true)->get();
+    public function index()
+    {
+        $active_employees = Employee::where('account_status', 'active')->paginate(10);
 
-        return view('dashboard', ['present_users' => $active_employees->where('present', true), 'absent_users' => $active_employees->where('present', false)]);
-    }
-
-    public function displayKioskMode() {
-        $employees = Employee::where('active', true)->get();
-
-        return view('kiosk', ['employees' => $employees]);
+        return view('dashboard', [
+            'active_employees' => $active_employees,
+        ]);
     }
 
     /**
-     * Personeel in- of uitchecken.
+     * Personeel's logboek weergeven.
      */
-    public function togglePresence(int $id) {
-        $employee = Employee::findOrFail($id);
-
-        $present = !$employee->present;
-        $presence_state = $employee->present ? 'CHECKED OUT' : 'CHECKED IN';
-
-        $previous_activity_time = strtotime($employee->updated_at);
-        $current_activity_time = strtotime('now');
-        $session_time = intval(($current_activity_time - $previous_activity_time) / 60);
-
-        $logging_data = [
-            'employee_id' => $employee->id,
-            'presence_state' => $presence_state,
-            'session_time' => $session_time,
-        ];
-        $employee->logging()->create($logging_data);
-
-        $employee_data = [
-            'last_check_in' => $present ? now() : $employee->last_check_in,
-            'last_check_out' => !$present ? now() : $employee->last_check_out,
-            'present' => $present,
-        ];
-        $employee->update($employee_data);
-
-        return redirect()->back();
-    }
-
     public function showLogs(int $id) {
         $employee = Employee::findOrFail($id);
 
@@ -59,8 +29,8 @@ class DashboardController extends Controller
      * Ziekgemelde personeel beter melden.
      */
     public function reportRecovery(int $id) {
-        $employee_medical_leave = Event::where('employee_id', $id)->whereDate('start', now())->where('sick', true);
-        $employee_medical_leave->update(['sick' => false]);
+        $employee_medical_leave = Event::where('employee_id', $id)->whereDate('start', now())->where('called_in_sick', true);
+        $employee_medical_leave->update(['called_in_sick' => false]);
 
         return redirect()->back();
     }
