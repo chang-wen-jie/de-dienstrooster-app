@@ -5,7 +5,7 @@ Verder vallen alle gebeurtenissen gemakkelijk in één oogopslag te zien binnen 
 
 ## Stapsgewijze Gebruiksaanwijzing
 
-- 1: Clone dit project binnen het gewenste folder (`git clone https://github.com/chang-wen-jie/dienstrooster-app.git`)
+- 1: Clone dit project binnen het gewenste folder (`git clone https://github.com/chang-wen-jie/de-dienstrooster-app.git`)
 - 2: Installeer alle externe pakketten (`npm i` & `composer i`)
 - 3: Hernoem het `.env.example` bestand naar `.env` en pas het toe naar de desbetreffende databasegegevens
 - 4: Start de databaseserver op
