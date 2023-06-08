@@ -17,16 +17,16 @@
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Bedrijfsrol</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Personeelsnaam</span>
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Personeel</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
                                     <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Accountstatus</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Meest recente activiteit</span>
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Meest recent uitgevoerde actie</span>
                                 </th>
                                 <th class="px-6 py-3 bg-gray-50 text-left">
-                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Beheren</span>
+                                    <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">Acties</span>
                                 </th>
                             </tr>
                             </thead>
@@ -57,7 +57,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                                         <a href="{{ route('admin.edit', $employee->id)}}" class="btn btn-primary btn-sm">
-                                            Acties
+                                            Beheren
                                         </a>
                                     </td>
                                 </tr>
