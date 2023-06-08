@@ -12,12 +12,12 @@ class Event extends Model
     protected $fillable = [
         'employee_id',
         'event_type',
-        'start',
-        'end',
+        'event_start',
+        'event_end',
         'called_in_sick'
     ];
 
-    protected $dates = ['start', 'end'];
+    protected $dates = ['event_start', 'event_end'];
 
     public function employee()
     {

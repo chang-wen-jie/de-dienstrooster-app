@@ -19,7 +19,7 @@ class CalendarController extends Controller
         $event_start = $request->get('start');
         $event_end = $request->get('end');
 
-        $filtered_events = Event::whereBetween('start', [$event_start, $event_end])->get();
+        $filtered_events = Event::whereBetween('event_start', [$event_start, $event_end])->get();
 
         $events = [];
         foreach ($filtered_events as $filtered_event) {
@@ -27,11 +27,11 @@ class CalendarController extends Controller
             $employee = Employee::findOrFail($employee_id);
 
             $events[] = [
-                'name' => $employee->name,
                 'id' => $filtered_event->id,
+                'name' => $employee->name,
                 'type' => $filtered_event->event_type,
-                'start' => $filtered_event->start,
-                'end' => $filtered_event->end,
+                'start' => $filtered_event->event_start,
+                'end' => $filtered_event->event_end,
                 'sick' => $filtered_event->called_in_sick,
             ];
         }

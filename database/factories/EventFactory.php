@@ -17,17 +17,17 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
-        $start = Carbon::now()->month(6)->day(rand(1, 31))->hour(rand(9, 16))->minute(0)->second(0);
-        $start_max_hours= 17 - $start->hour;
-        $start_max_minutes = ($start_max_hours* 60) - $start->minute;
-        $start_max_seconds = ($start_max_minutes * 60) - $start->second;
-        $end = $start->copy()->addSeconds(rand(0, $start_max_seconds));
+        $event_start = Carbon::now()->month(6)->day(rand(1, 31))->hour(rand(9, 16))->minute(0)->second(0);
+        $event_start_max_hours= 17 - $event_start->hour;
+        $event_start_max_minutes = ($event_start_max_hours* 60) - $event_start->minute;
+        $event_start_max_seconds = ($event_start_max_minutes * 60) - $event_start->second;
+        $event_end = $event_start->copy()->addSeconds(rand(0, $event_start_max_seconds));
 
         return [
             'employee_id' => fake()->numberBetween(1, 15),
             'event_type' => fake()->randomElement(['shift', 'leave']),
-            'start' => $start,
-            'end' => $end,
+            'event_start' => $event_start,
+            'event_end' => $event_end,
             'called_in_sick' => fake()->boolean(),
         ];
     }

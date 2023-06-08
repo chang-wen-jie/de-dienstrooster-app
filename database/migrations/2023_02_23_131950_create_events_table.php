@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('employee_id')->nullable()->constrained('employees');
             $table->enum('event_type', ['shift', 'leave']);
-            $table->dateTime('start')->nullable();
-            $table->dateTime('end')->nullable();
+            $table->dateTime('event_start')->nullable();
+            $table->dateTime('event_end')->nullable();
             $table->boolean('called_in_sick')->nullable();
             $table->timestamps();
         });

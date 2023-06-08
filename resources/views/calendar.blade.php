@@ -19,10 +19,10 @@
 
                         <div class="filter-container">
                             <select id="filter">
-                                <option value="">Alle</option>
+                                <option value="">Alles</option>
                                 <option value="shift">Ingeroosterd</option>
                                 <option value="leave">Roostervrij</option>
-                                <option value="sick">Ziek</option>
+                                <option value="sick">Ziekgemeld</option>
                             </select>
                         </div>
 

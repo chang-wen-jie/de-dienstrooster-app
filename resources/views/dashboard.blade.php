@@ -14,7 +14,7 @@
 
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Presentie') }}
+            {{ __('Presentielijst') }}
         </h2>
     </x-slot>
 
@@ -89,7 +89,7 @@
                                             {{ $employee_is_present ? __('Afwezig Melden') : __('Aanwezig Melden') }}
                                         </a>
 
-                                        <a href="{{ route('showLogs', $employee->id) }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route('logs', $employee->id) }}" class="btn btn-primary btn-sm">
                                             {{__('Logboek')}}
                                         </a>
                                     </td>

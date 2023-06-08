@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $employee->name }}{{ __("'s Logboek") }}
+            {{ __("Logboek van") }} {{ $employee->name }}
         </h2>
     </x-slot>
 
@@ -23,7 +23,7 @@
                         @foreach($employee->log()->orderBy('updated_at', 'desc')->get() as $log)
                             @if($log->presence_state === 'CHECKED IN')
                                 <div class="mt-6 space-y-6">
-                                    <b>Ingecheckt</b> om <b>{{ $log->updated_at }}</b>
+                                    <b>Ingecheckt</b> op <b>{{ $log->updated_at }}</b>
                                     @if ($log->session_time > 60)
                                         (Afwezig voor {{ intdiv($log->session_time, 60) }} uur en {{ $log->session_time % 60 }} minuten)
                                     @else
@@ -32,7 +32,7 @@
                                 </div>
                             @else
                                 <div class="mt-6 space-y-6">
-                                    <b>Uitgecheckt</b> om <b>{{ $log->updated_at }}</b>
+                                    <b>Uitgecheckt</b> op <b>{{ $log->updated_at }}</b>
                                     @if ($log->session_time > 60)
                                         (Aanwezig voor {{ intdiv($log->session_time, 60) }} uur en {{ $log->session_time % 60 }} minuten)
                                     @else

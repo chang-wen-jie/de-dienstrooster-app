@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,7 +13,7 @@ class AdminController extends Controller
      */
     public function index()
     {
-        $employees = Employee::orderBy('account_status')->paginate(10);
+        $employees = Employee::orderBy('name')->paginate(10);
 
         return view('admin.admin', ['employees' => $employees]);
     }
@@ -29,16 +28,16 @@ class AdminController extends Controller
 
     public function store(Request $request)
     {
-        $employee_rfid = $request->input('rfid');
         $employee_name = $request->input('name');
         $employee_email = $request->input('email');
         $employee_password = $request->input('password');
+        $employee_rfid = $request->input('rfid');
 
         $employee_data = [
-            'rfid' => $employee_rfid,
             'name' => $employee_name,
             'email' => $employee_email,
             'password' => Hash::make($employee_password),
+            'rfid' => $employee_rfid,
             'account_type' => 'user',
             'account_status' => 'active',
         ];
@@ -64,14 +63,14 @@ class AdminController extends Controller
     {
         $employee = Employee::findOrFail($id);
 
-        $employee_rfid = $request->input('rfid');
         $employee_name = $request->input('name');
+        $employee_rfid = $request->input('rfid');
         $employee_account_type = $request->input('account_type');
         $employee_account_is_active = $request->input('account_status');
 
         $employee_data = [
-            'rfid' => $employee_rfid,
             'name' => $employee_name,
+            'rfid' => $employee_rfid,
             'account_type' => $employee_account_type,
             'account_status' => $employee_account_is_active ? 'active' : 'inactive',
         ];

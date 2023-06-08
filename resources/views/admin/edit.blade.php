@@ -62,7 +62,7 @@
                             <div class="block mt-4">
                                 <label for="account_status" class="inline-flex items-center">
                                     <input id="account_status" name="account_status" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="active" value="1" {{ $employee->active ? 'checked="checked' : '' }}"/>
-                                    <span class="ml-2 text-sm text-gray-600">{{ __('Is dit personeel nog actief?') }}</span>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Actief') }}</span>
                                 </label>
                             </div>
 
@@ -98,15 +98,15 @@
 
                             <div class="flex gap-4">
                                 <div>
-                                    <x-input-label for="shift-time-start" :value="__('Starttijd')" />
-                                    <input type="time" id="shift-time-start" name="shift-time-start" required>
-                                    <x-input-error class="mt-2" :messages="$errors->get('shift-time-start')" />
+                                    <x-input-label for="shift-start-time" :value="__('Starttijd')" />
+                                    <input type="time" id="shift-start-time" name="shift-start-time" required>
+                                    <x-input-error class="mt-2" :messages="$errors->get('shift-start-time')" />
                                 </div>
 
                                 <div>
-                                    <x-input-label for="shift-time-end" :value="__('Eindtijd')" />
-                                    <input type="time" id="shift-time-end" name="shift-time-end" required>
-                                    <x-input-error class="mt-2" :messages="$errors->get('shift-time-end')" />
+                                    <x-input-label for="shift-end-time" :value="__('Eindtijd')" />
+                                    <input type="time" id="shift-end-time" name="shift-end-time" required>
+                                    <x-input-error class="mt-2" :messages="$errors->get('shift-end-time')" />
                                 </div>
                             </div>
 
@@ -177,8 +177,8 @@
                         <form method="post" action="{{ route('setSchedule', $employee->id) }}" class="mt-6 space-y-6">
                             @csrf
                             <div>
-                                <x-input-label for="week" :value="__('Weeknummer')" />
-                                <select id="week" name="week" onchange="fetchSchedule({{ $employee->id }}, this)">
+                                <x-input-label for="scheduled-week" :value="__('Weeknummer')" />
+                                <select id="scheduled-week" name="scheduled-week" onchange="fetchSchedule({{ $employee->id }}, this)">
                                     <option value="" selected>
                                         Kies een week
                                     </option>

@@ -6,6 +6,7 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\KioskController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,9 +43,10 @@ Route::middleware('auth')->group(function () {
     Route::middleware('role')->group(function () {
         Route::resource('admin', AdminController::class);
         Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-        Route::get('/admin/user/{id}/logs', [DashboardController::class, 'showLogs'])->name('showLogs');
         Route::put('/admin/user/{id}/update', [AdminController::class, 'update'])->name('update');
         Route::post('/admin/store', [AdminController::class, 'store'])->name('store');
+
+        Route::get('/admin/user/{id}/logs', [LogController::class, 'index'])->name('logs');
 
         Route::post('/admin/user/{id}/setEvent', [EventController::class, 'setEvent'])->name('setEvent');
         Route::get('/admin/user/{id}/getSchedule/{week}', [EventController::class, 'getSchedule'])->name('getSchedule');

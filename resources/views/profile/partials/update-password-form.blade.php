@@ -5,7 +5,7 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-600">
-            {{ __('Zorg voor een sterk wachtwoord om jouw account beveiligd te houden. Gebruik een lang wachtwoord die uit willekeurige leestekens, nummers en symbolen bestaat.') }}
+            {{ __('Zorg voor een sterk wachtwoord om jouw account beveiligd te houden. Gebruik een lang wachtwoord dat uit willekeurige leestekens, nummers en symbolen bestaat.') }}
         </p>
     </header>
 
