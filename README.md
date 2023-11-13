@@ -1,7 +1,7 @@
 ## De Dienstrooster App
 
 Met dit systeem kun je gemakkelijk de diensten en aanwezig- en afwezigheden van het personeel registreren, aanpassen, en/of (periodiek) inplannen.
-Verder vallen alle gebeurtenissen gemakkelijk in één oogopslag te zien binnen het ingebouwde kalenderoverzicht.
+Verder vallen alle gebeurtenissen gemakkelijk in één oogopslag te zien met behulp van het ingebouwde kalenderoverzicht.
 
 ## Stapsgewijze Gebruiksaanwijzing
 
