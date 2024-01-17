@@ -11,8 +11,8 @@ Beheer personeel, dienstroosters, aan- en afwezigheid, en meer.
 
 ## Installatie
 1. Clone dit project `git clone https://github.com/chang-wen-jie/de-dienstrooster-app.git`
-2. Installeer alle afhankelijkheden `npm i` & `composer i`
-3. Stel een `.env` bestand op `cp .env.example .env` & `php artisan key:generate`
-4. Start de databaseserver
+2. Installeer alle projectafhankelijkheden `npm i` & `composer i`
+3. Stel een databaseconnectie in `cp .env.example .env` & `php artisan key:generate`
+4. Start de databaseserver op
 5. Voer de databasemigraties uit `php artisan migrate --seed`
-6. Start de applicatie `npm run dev` & `php artisan serve`
+6. Draai de applicatie `npm run dev` & `php artisan serve`
