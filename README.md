@@ -9,6 +9,10 @@ Beheer personeel, dienstroosters, aan- en afwezigheid, en meer.
 - Beheer personeelsinformatie
 - Laat personeel in- en uit checken met personeelspas
 
+## Benodigdheden
+- Laravel
+- Composer
+
 ## Installatie
 1. Clone dit project `git clone https://github.com/chang-wen-jie/de-dienstrooster-app.git`
 2. Installeer alle projectafhankelijkheden `npm i` & `composer i`
